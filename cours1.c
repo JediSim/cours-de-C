@@ -3,14 +3,14 @@
 
 // #include <cours1.h>
 
-int remove_letter(char c, char s[])
-{
-    int i = 0;
-    while(s[i] != 0)
-    {
-        s[i] = c=s[i]
-    }
-}
+// int remove_letter(char c, char s[])
+// {
+//     int i = 0;
+//     while(s[i] != 0)
+//     {
+//         s[i] = c=s[i]
+//     }
+// }
 
 int is_in_string(char c, char s[])
 {
