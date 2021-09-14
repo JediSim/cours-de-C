@@ -152,7 +152,91 @@ return : [int] hauteur de l'arbre
 }
 
 //-----------------------------------------------------------------------------------5. LES ARBRES BINAIRES DE RECHERCHE
+arbre_int ajout_trie(int n, arbre_int a)
+{
+    if (arbre_vide(a))
+    {
+        a = creer_arbre(n,NULL,NULL);
+    }
+    else if (n <= a->val)
+    {
+        a->brg = ajout_trie(n,a->brg);
+    }
+    else
+    {
+        a->brd = ajout_trie(n,a->brd);
+    }
+}
 
+int rechercher_trie(int e, arbre_int a)
+/**
+recherche une valeur dans un arbre et retourne 1 si il est trouvé
+param : -e [int] valeur a trouver dans l'arbre
+        -a [arbre_int] arbre dans lequel rechercher
+return : bool vrai si trouvé
+**/
+{
+    if (arbre_vide(a))
+    {
+        return 0;
+    }
+    else if (e == a->val)
+    {
+        return 1;
+    }
+    else if (e < a->val)
+    {
+        return rechercher_trie(e,a->brg) || 0;
+    }
+    else
+    {
+        return rechercher_trie(e,a->brd) || 0;
+    }
+}
+
+int max_arbre(arbre_int a)
+{
+    if (arbre_vide(a->brg) && arbre_vide(a->brd))
+    {
+        return a->val;
+    }
+    else
+    {
+        return max(max_arbre(a->brg),max_arbre(a->brd));
+    }
+}
+
+arbre_int supprimer_trie(int e, arbre_int a)
+{
+    if (e == a->val)
+    {
+        if (arbre_vide(a->brg) && arbre_vide(a->brd))
+        {
+            a = NULL;
+        }
+        else if (!arbre_vide(a->brg) && arbre_vide(a->brd))
+        {
+            a = a->brg;
+        }
+        else if (arbre_vide(a->brg) && !arbre_vide(a->brd))
+        {
+            a = a->brd;
+        }
+        else
+        {
+            a->val = max_arbre(a->brg);
+            supprimer_trie(max_arbre(a->brg),a->brg);
+        }
+    }
+    else if (e < a->val)
+    {
+        supprimer_trie(e,a->brg);
+    }
+    else
+    {
+        supprimer_trie(e,a->brd);
+    }
+}
 
 int main()
 {
@@ -178,5 +262,14 @@ int main()
     hauteur = hauteur_arbre(abc);
     printf("hauteur : %i\n",hauteur);
 
+    ajout_trie(2,ab);
+    ajout_trie(3,ab);
+    ajout_trie(1,ab);
+    affiche(ab,0);
+
+    dans = rechercher_trie(3,ab);
+    printf("est dans trie : %i\n",dans);
+
+    // a tester la fct suppression
     return 0;
 }
