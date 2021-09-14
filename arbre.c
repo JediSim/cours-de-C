@@ -3,6 +3,22 @@
 
 #include "arbre.h"
 
+//-----------------------------------------------------------------------------------fct utile
+int max(int a, int b)
+{
+    if (a>b)
+    {
+        return a;
+    }
+    else
+    {
+        return b;
+    }
+}
+//-----------------------------------------------------------------------------------fin fct utile
+
+
+//-----------------------------------------------------------------------------------fct de manipulation d'arbre (arbre_vide, creer_arbre...)
 arbre_int creer_arbre(int nb, arbre_int bg, arbre_int bd)
 {
     arbre_int a;
@@ -25,21 +41,6 @@ return : bool vrai si a est vide
 **/
 {
     return a == NULL;
-}
-
-int nb_noeud(arbre_int a)
-/**
-param : -a [arbre_int]
-return : nb de noeud dans l'arbre
-**/
-{
-    if (arbre_vide(a))
-    {
-        return 0;      
-    }else
-    {
-        return 1 + nb_noeud(a->brg) + nb_noeud(a->brd);
-    }
 }
 
 void affiche(arbre_int a, int etage)
@@ -92,10 +93,70 @@ return : bool vrai si est dedans
         return est_dans(n,a->brd);
     }
 }
+//----------------------------------------------------------------------------------- fin fct de manipulation d'arbre
+
+
+//-----------------------------------------------------------------------------------4.3 Metriques des arbres binaires
+int nb_noeud(arbre_int a)
+/**
+param : -a [arbre_int]
+return : nb de noeud dans l'arbre
+**/
+{
+    if (arbre_vide(a))
+    {
+        return 0;      
+    }else
+    {
+        return 1 + nb_noeud(a->brg) + nb_noeud(a->brd);
+    }
+}
+
+int level_noeud(arbre_int n, arbre_int a)
+/**
+renvoie le niveau ou est le noeud dans l'arbre
+param : -n [arbre_int] noeud a trouver
+        -a [arbre_int] arbre ou chercher
+return : [int] numero d'étage
+**/
+{
+    if (n->val == a->val)
+    {
+        return 0;
+    }
+    else if (est_dans(n,a->brd))
+    {
+        return 1 + level_noeud(n,a->brd);
+    }
+    else
+    {
+        return 1 + level_noeud(n,a->brg);
+    }
+}
+
+int hauteur_arbre(arbre_int a)
+/**
+calcul la hauteur d'un arbre
+param : -a [arbre_int] arbre à mesurer
+return : [int] hauteur de l'arbre
+**/
+{
+    if (arbre_vide(a))
+    {
+        return 0;
+    }
+    else
+    {
+        return 1 + max(hauteur_arbre(a->brg),hauteur_arbre(a->brd));
+    }
+}
+
+//-----------------------------------------------------------------------------------5. LES ARBRES BINAIRES DE RECHERCHE
+
 
 int main()
 {
-    int taille,vide,dans;   
+    int taille,vide,dans,niveau,hauteur;   
     arbre_int ab,abc;  
     ab = creer_arbre(1,NULL,NULL);
     vide = arbre_vide(ab);
@@ -110,6 +171,12 @@ int main()
 
     dans = est_dans(ab,abc);
     printf("est dans : %i\n",dans);
+
+    niveau = level_noeud(ab,abc);
+    printf("niveau : %i\n",niveau);
+
+    hauteur = hauteur_arbre(abc);
+    printf("hauteur : %i\n",hauteur);
 
     return 0;
 }
