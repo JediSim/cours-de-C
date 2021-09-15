@@ -153,6 +153,12 @@ return : [int] hauteur de l'arbre
 
 //-----------------------------------------------------------------------------------5. LES ARBRES BINAIRES DE RECHERCHE
 arbre_int ajout_trie(int n, arbre_int a)
+/**
+ajoute un element dans un arbre trie
+param : -n [int] element a ajouter
+        -a [arbre_int] arbre ou ajouter l'element
+return : [arbre_int] arbre a en parametre modifié
+**/
 {
     if (arbre_vide(a))
     {
@@ -270,6 +276,8 @@ int main()
     dans = rechercher_trie(3,ab);
     printf("est dans trie : %i\n",dans);
 
+    supprimer_trie(3,ab);
+    affiche(ab,0);
     // a tester la fct suppression
     return 0;
 }

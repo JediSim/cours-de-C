@@ -1,16 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// #include <cours1.h>
+#include "cours1.h"
 
-// int remove_letter(char c, char s[])
-// {
-//     int i = 0;
-//     while(s[i] != 0)
-//     {
-//         s[i] = c=s[i]
-//     }
-// }
+
+
+//-----------------------------------------------------------------------------------------------------Q.2
 
 int is_in_string(char c, char s[])
 {
@@ -59,6 +54,111 @@ int size_longest_word(char t[], char sep[])
     return l;
 }
 
+//-----------------------------------------------------------------------------------------------------Q.4
+/**
+Substitut d'un mot par un autre mot
+- mot meme taille : easy on remplace dans la chaine
+- mot plus court : moyen possible via décalage
+- mot plus long : impossible chaine de départ trop courte
+**/
+
+//-----------------------------------------------------------------------------------------------------Q.5
+/**
+/!\ existe une version plus rapide /!\
+**/
+int remove_letter(char c, char s[])
+{
+    int nr = 0;
+    int i = 0;
+    int j;
+    while(s[i] != 0)
+    {
+        if (c == s[i])
+        {
+            nr++;
+            j = i;
+            while (s[j+1] != 0)
+            {
+                s[j] = s[j+1];
+                j++;
+            }
+            s[j] = 0;
+        }else
+        {
+            i++;
+        }
+    }
+    return nr;
+}
+// version plus rapide et avec pointeur
+
+int remove_letter_ptr(char c, char s[])
+/**
+retire la lettre passé en param dans la chaine
+param : -c [char] caractere à supprimer
+        -s[] [char] chaine dans laquelle on supprime le caractere
+return : [int] nb de caractere supprimé
+**/
+{
+    char* j = &s[0];
+    char* i = &s[0];
+    while (*i != 0)
+    {
+        if(*i != c)
+        {
+            *j = *i;
+            *j = *(++j);
+        }
+        i++;
+    }
+    *j = 0;
+    return i-j;
+}
+
+//-----------------------------------------------------------------------------------------------------Q.6
+/**
+Compter le nombre de mot dans un texte.
+En python :
+D = {'arbre':5,'le':50,...}
+D['arbre'] = D['arbre']+1
+
+En C :
+On doit creer un type pour le dico et toutes les fct qui vont avec
+**/
+
+//-----------------------------------------------------------------------------------------------------Q.7
+void Token_init(Token* t, char str[], char sep[])
+{
+    for(int i=0,i<128,i++) t->sep[i]=0;
+    while(*sep)
+    {
+        t->sep[*sep] = 1;
+        sep++;
+    }
+    t->texte=str;
+    Token_suivant(t);
+}
+
+char* Token_valeur(Token* t)
+{
+
+}
+
+int Token_fini(Token* t)
+{
+
+}
+
+void Token_suivant(Token* t)
+{
+
+}
+
+void Token_termine(Token* t)
+{
+    
+}
+
 int main()
 {
     char sep[] = " ,;:!?.'";
@@ -67,6 +167,9 @@ int main()
     int nb = nb_words(str,sep);
     printf("mot le plus long : %i \n",s);
     printf("nb mot : %i \n",nb);
-    printf("Hello world!");
+    printf("Hello world!\n");
+    nb = remove_letter_ptr('e',str);
+    printf(str);
+    printf("\n nb : %i",nb);
     return 0;
 }
