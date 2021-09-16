@@ -30,7 +30,18 @@ void avance( Tortue* ptrTortue, float d )
 
 void tourneG(Tortue* ptrTortue, float d)
 {
-    ptrTortue->t += d;
+  ptrTortue->t += d;
+}
+
+void tourneD(Tortue* ptrTortue, float d)
+{
+  ptrTortue->t -= d;
+}
+
+void allezA(Tortue* ptrTortue, float x, float y)
+{
+  ptrTortue->x = x;
+  ptrTortue->y = y;
 }
 
 // Un passage en entree serait suffisant lorsqu'aucune modification n'est nécessaire, 
@@ -40,6 +51,37 @@ void affiche( Tortue tortue )
   printf( "%f %f\n", tortue.x, tortue.y );
 }
 
+// T est la tortue, 
+// d est la longueur du trace, 
+// k sera utilisé plus tard (indique la profondeur de récursivité demandée).
+void koch( Tortue* T, float d, int k )
+{
+  if (k==0)
+  {
+    affiche( *T );
+    avance( T, d / 3 ); // (*)
+    affiche( *T );
+  }else
+  {
+    affiche( *T );
+    koch( T, d, k-1 ); // (*)
+    affiche( *T );
+  
+    tourneG( T, 60 );  
+    koch( T, d, k-1 ); // (*)
+    affiche( *T );
+  
+    tourneD( T, 120 );  
+    koch( T, d, k-1 ); // (*)
+    affiche( *T );
+  
+    tourneG( T, 60 );  
+    koch( T, d, k-1 ); // (*)
+    affiche( *T );
+  }
+  
+}
+
 int main()
 {
   Tortue T;
@@ -47,7 +89,7 @@ int main()
   affiche( T );
  
   // (*)
- 
+  /** triangle
   // 1er cote
   avance( &T, 10.0f );
   tourneG( &T, 120 );
@@ -62,4 +104,36 @@ int main()
   avance( &T, 10.0f );
   tourneG( &T, 120 );
   affiche( T );
+  **/
+
+  /** Maison
+  tourneD(&T,90);
+  avance( &T, 5.0f );
+  affiche( T );
+
+  tourneG(&T,90);
+  avance( &T, 5.0f );
+  affiche( T );
+
+  tourneG(&T,90);
+  avance( &T, 5.0f );
+  affiche( T );
+
+  tourneG(&T,90);
+  avance( &T, 5.0f );
+  affiche( T );
+
+  tourneD(&T,120);
+  avance( &T, 5.0f );
+  affiche( T );
+
+  tourneD(&T,120);
+  avance( &T, 5.0f );
+  affiche( T );
+  **/
+
+  koch(&T,5.0,4);
 }
+/** tracer une maison 
+La maison de droite n'est pas trop dur a tracer a condition que l'on passe plusieurs fois sur les memes trais
+**/

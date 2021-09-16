@@ -4,7 +4,7 @@
  
 float f( float x )
 {
-    return sqrt( x ) * sin( x ); // a modifier pour changer de fct
+    return sin( 1/x ); // a modifier pour changer de fct
 }
  
 void usage()

@@ -17,16 +17,16 @@ void affiche(Jeu g)
         {
             if (g[i][j]=='x')
             {
-                // COLOR("33");
+                COLOR("33");
                 printf(" %c",g[i][j]);
+                COLOR("0");
                 printf(" |");
-                // COLOR("0");
             }else if (g[i][j]=='0')
             {
-                // COLOR("31");
+                COLOR("31");
                 printf(" %c",g[i][j]);
+                COLOR("0");
                 printf(" |");
-                // COLOR("0");
             }else
             {
                 printf(" %c |",g[i][j]);
@@ -39,7 +39,8 @@ void affiche(Jeu g)
 
 void init (Jeu g)
 {
-    int i,j = 0;
+    int i = 0;
+    int j = 0;
     for(;i<6;i++)
     {
         for(;j<7;j++)
