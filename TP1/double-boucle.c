@@ -84,48 +84,39 @@ void affiche_histogramme_style( int* data, int n )
     int mini = min(data,n);
     for(int i=max(data,n);i>=mini;i--)
     {
-        for(int j=0;j<n-1;j++)
+        if(data[0]==i)
+        {
+            if (data[0]<data[1])
+            {
+                printf("/");
+            }else
+            {
+                printf("_");
+            }
+        }
+        else
+        {
+            printf(" ");
+        }
+        for(int j=1;j<n-1;j++)
         {
             if(data[j]==i)
             {
-                if(j>0)
+                if (data[j]<data[j+1])
                 {
-                    if (data[j]<data[j+1])
-                    {
-                        printf("/");
-                    }else if(data[j-1]>data[j])
-                    {
-                        printf("\\");
-                    }else if(data[j]==data[j+1])
-                    {
-                        printf("_");
-                    }
-                }else
+                    printf("/");
+                }else if(data[j-1]>data[j])
                 {
-                    if (data[j]<data[j+1])
-                    {
-                        printf("/");
-                    }else if(data[j]==data[j+1])
-                    {
-                        printf("_");
-                    }
+                    printf("\\");
+                }else if(data[j]==data[j+1])
+                {
+                    printf("_");
                 }
             }else
             {
                 printf(" ");
             }  
         }
-        if(i==mini)
-        {
-            if(data[n-2]>data[n-1])
-            {
-                printf("\\");
-            }else if(data[n-1]==data[n])
-            {
-                printf("_");
-            }
-        }
-        
         printf("\n");
     }
     affiche_int(data,n);
