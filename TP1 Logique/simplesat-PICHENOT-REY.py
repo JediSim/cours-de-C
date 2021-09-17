@@ -14,7 +14,12 @@ def solve(F, sol, bcp=False):
         - soit None si la formule n'est pas satisfiable,
         - soit une solution (liste de littéraux) satisfaisant la formule.
     """
-
+    # print("on solve")
+    # boolean constraints propagation
+    if bcp:
+        F, sol2 = BCP(F)
+        sol.extend(sol2)
+    
     # si F est vide, il n'y a aucune clause et la formule est satisfaite avec
     # la solution courante
     if not F: return sol
@@ -41,17 +46,17 @@ def simplify_formula(F, lit):
       - supprime les littéraux ``-lit`` dans les autres clauses (ce littéral
         est faux)
     """
+    # print(F)
     simplified_F = []
     for cl in F:
-        if -lit in cl:
+        if lit not in cl:
             tab_inter = []
             for e in cl:
                 if (e!=-lit):
                     tab_inter.append(e)
 
             simplified_F.append(tab_inter)
-        elif lit not in cl:
-            simplified_F.append(cl)
+    # print(simplified_F)
     return simplified_F
 
 
@@ -65,6 +70,12 @@ def test(F, args):
     print("après :", Fs)
 
 
+def uniqueInF(F):
+    for cl in F:
+        if len(cl)==1:
+            return True
+    return False
+
 ###
 # optimisation pour avoir un algo de style "DPLL
 def BCP(F):
@@ -73,7 +84,12 @@ def BCP(F):
     des littéraux simplifiés.
     """
     sol = []
-    # ...    # TODO
+    while uniqueInF(F):
+        for cl in F:
+            if len(cl)==1:
+                sol.append(cl[0])
+                F = simplify_formula(F,cl[0])
+
     return F, sol
 
 

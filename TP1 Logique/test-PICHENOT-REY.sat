@@ -1,4 +1,4 @@
 # un exemple de formule toute simple dans un fichier SAT
-x1 -x2 x3
+x1 -x1 -x2 x3
 -x1 -x3 x4
 x2 -x4
