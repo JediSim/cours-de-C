@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+# -*- coding: utf-8 -*-
 
 ###
 # version naïve
@@ -43,14 +43,14 @@ def simplify_formula(F, lit):
     """
     simplified_F = []
     for cl in F:
-        if lit in cl:
-            if lit<0:
-                tab_inter = []
-                for i in range(0,len(cl)):
-                    if (cl[i]!=lit):
-                        tab_inter.append(cl[i])
-                simplified_F.append(tab_inter)
-        else:
+        if -lit in cl:
+            tab_inter = []
+            for e in cl:
+                if (e!=-lit):
+                    tab_inter.append(e)
+
+            simplified_F.append(tab_inter)
+        elif lit not in cl:
             simplified_F.append(cl)
     return simplified_F
 
@@ -73,7 +73,7 @@ def BCP(F):
     des littéraux simplifiés.
     """
     sol = []
-    ...    # TODO
+    # ...    # TODO
     return F, sol
 
 
