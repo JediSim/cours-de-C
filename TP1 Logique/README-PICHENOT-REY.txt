@@ -31,4 +31,7 @@ Q.8 :
 Nous avons rejouter un print() dans la fonction solve de maniere a voir combien de fois nous passons dedans.
 Sur la formule des cartes nous avons 10 passage avec l'option -D et sans l'option il y a significativement plus de passage (environ 70)
 
+Q.10 :
+
+
 
