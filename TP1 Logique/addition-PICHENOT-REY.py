@@ -44,8 +44,21 @@ if __name__ == "__main__":
 
     # les contraintes sur les bits du résultat
     # TODO
+    bnr=bin(s).replace('0b','')
+    x=bnr[::-1]
+    while len(x)<n:
+        x+='0'
+    bnr = x[::]
+    for i in range(len(bnr)):
+        if bnr[i] == '1':
+            print(f"s{i}")
+        else:
+            print(f"-s{i}")
     
+    print("-c0")
 
     # appels aux fonction xor3 et carry3 sur tous les bits
     # TODO
-    ...
+    for i in range(n):
+        xor3(f"s{i}",f"a{i}",f"b{i}",f"c{i}")
+        carry3(f"c{i+1}",f"a{i}",f"b{i}",f"c{i}")
