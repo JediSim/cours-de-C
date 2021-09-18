@@ -163,6 +163,6 @@ if __name__ == "__main__":
     bnr = x[::]
     for i in range(len(bnr)):
         if bnr[i] == '1':
-            print(f"s{i}")
+            print(f"p_{i}")
         else:
-            print(f"-s{i}")
+            print(f"-p_{i}")
