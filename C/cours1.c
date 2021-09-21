@@ -215,6 +215,27 @@ bool mot_dans_texte (char* mot, char* texte)
     return 0;
 }
 
+//-----------------------------------------------------------------------------------------------------Q.9
+int hash1(char* str)
+{
+    int v = 0;
+    while(*str != 0)
+    {
+        v += *str++;
+    }
+    return v;
+}
+int hash2(char* str)
+{
+    static int coef[] = {7, 251, 89437, 17, 765411, 5, 1379, 23453}
+    int v = 0, i = 0;
+    for(int i = 0; str[i] != 0; ++i)
+    {
+        v += str[i] * coef[i & 7];
+    }
+    return v;
+}
+
 int main()
 {
     char sep[] = " ,;:!?.'";
