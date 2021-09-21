@@ -141,22 +141,78 @@ void Token_init(Token* t, char str[], char sep[])
 
 char* Token_valeur(Token* t)
 {
-
+    return t->mot;
 }
 
 int Token_fini(Token* t)
 {
-
+    return *t->mot == 0;
 }
 
 void Token_suivant(Token* t)
 {
-
+    while((*t->texte != 0) && (t->sep[*t->texte] != 0)) // *t->texte == t->texte[0] 
+    {
+        t->texte++;
+    }
+    char* m = t->mot;
+    while((*t->texte != 0) && (t->sep[*t->texte] == 0)) // On doit tester que le mot soit pas trop long pour le tableau (m-(t->mot) < 48)
+    {
+        *m++ = *t->texte++;
+    }
+    *m = 0;
+    while((*t->texte != 0) && (t->sep[*t->texte] != 0)) // *t->texte == t->texte[0] 
+    {
+        t->texte++;
+    }
 }
 
 void Token_termine(Token* t)
 {
-    
+    t->texte = NULL;
+    *t->mot = 0;
+}
+
+//-----------------------------------------------------------------------------------------------------Q.8
+/**
+On part du principe que strcmp() est deja codée
+**/
+// bool prefixe(char mot[], char texte[])
+// {
+//     while(*mot != 0)
+//     {
+//         if (*mot != *texte)
+//         {
+//             return 0;
+//         }
+//         mot++;
+//         texte++;
+//     }
+//     return 1;
+// }
+
+// correction prefixe
+bool prefixe(char mot[], char texte[])
+{
+    while(*mot == *texte && *mot && *texte)
+    {
+        mot++;
+        texte++;
+    }
+    return *mot == 0;
+}
+
+bool mot_dans_texte (char* mot, char* texte)
+{
+    while(*texte != 0)
+    {
+        if (prefixe(mot,texte))
+        {
+            return 1;
+        }
+        texte++;
+    }
+    return 0;
 }
 
 int main()
