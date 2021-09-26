@@ -112,7 +112,7 @@ int hauteurPlat(Grille g, int l1, int l2)
 
 void ecrirePiece(Grille g, Piece p, int h, int l)
 {
-  if (l+p.largeur < LARGEUR)
+  if (l+p.largeur-1 < LARGEUR)
   {
     for (int i = p.hauteur-1; i >= 0; i--)
     {
@@ -135,6 +135,51 @@ Piece pieceAleatoire(Piece* t)
   return t[alea];
 }
 
+int estFini(Piece p, int h)
+{
+  return (p.hauteur + h) >= HAUTEUR;
+}
+
+void supprimerLigne(Grille g, int h)
+{
+  for (; h < HAUTEUR-1; h++)
+  {
+    for (int l = 0; l < LARGEUR; l++)
+    {
+      g[h][l] = g[h+1][l];
+    }
+  }
+  for (int l = 0; l < LARGEUR; l++)
+  {
+    g[h][l] = ' ';
+  }
+}
+
+int estPleine(Grille g, int h)
+{
+  int plein = 1;
+  for (int l = 0; l < LARGEUR; l++)
+  {
+    if (g[h][l] == ' ')
+    {
+      plein = 0;
+    }
+  }
+  return plein;
+}
+
+void nettoyer(Grille g)
+{
+  for (int h = 0; h < HAUTEUR; h++)
+  {
+    if (estPleine(g,h))
+    {
+      supprimerLigne(g,h);
+      h = h-1;
+    }
+  }
+}
+
 int main(int argc, char const *argv[])
 {
   //
@@ -149,8 +194,6 @@ int main(int argc, char const *argv[])
   // affichePiece(pieceAleatoire(pieces));
   //
 
-
-
   // Init
   Grille g;
   Piece pieces[NB_PIECES];
@@ -158,6 +201,7 @@ int main(int argc, char const *argv[])
   initialiseGrille( g );
   srand(time(NULL));
 
+  int nbpieces = 0;
   int touche;
   do {
     Piece p = pieceAleatoire(pieces);
@@ -170,9 +214,19 @@ int main(int argc, char const *argv[])
 
     if (touche >= 0) {
       int hp = hauteurPlat(g, touche, touche + p.largeur - 1);
-      ecrirePiece(g, p, hp, touche);
+      if (estFini(p,hp))
+      {
+        printf("La partie est fini !!!\n");
+        printf("nombre de pieces : %i\n",nbpieces);
+        initialiseGrille( g );
+      }
+      else
+      {
+        ecrirePiece(g, p, hp, touche);
+        nbpieces++;
+        nettoyer(g);
+      }
     }
-
   } while(touche >= 0);
   return 0;
 }
