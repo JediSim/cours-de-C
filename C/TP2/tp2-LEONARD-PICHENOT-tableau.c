@@ -75,6 +75,15 @@ void genererPieces(Piece* t)
   t[1].largeur = 2;
   t[1].forme[0] = "%%";
   t[1].forme[1] = "%%";
+
+  // LL
+  //  L
+  //  L
+  t[2].hauteur = 3;
+  t[2].largeur = 2;
+  t[2].forme[0] = "LL";
+  t[2].forme[1] = " L";
+  t[2].forme[2] = " L";
 }
 
 void affichePiece(Piece p)
@@ -114,13 +123,13 @@ void ecrirePiece(Grille g, Piece p, int h, int l)
 {
   if (l+p.largeur-1 < LARGEUR)
   {
-    for (int i = p.hauteur-1; i >= 0; i--)
+    for (int i = 0; i < p.hauteur; i++)
     {
       for (int j = 0; j < p.largeur; j++)
       {
-        ecrireCase(g,h,l+j,p.forme[i][j]);
+        ecrireCase(g,(h+p.hauteur-1)-i,l+j,p.forme[i][j]);
       }
-      h++;
+      // h++;
     }
   }
   else
@@ -180,6 +189,67 @@ void nettoyer(Grille g)
   }
 }
 
+int derniereCase(Grille g, int col)
+{
+  for (int h = HAUTEUR-1; h > 0; h--) 
+  {
+    if (g[h][col] != ' ') return h+1;
+  }
+  return 0;
+}
+
+// int estPosable(Grille g, Piece* piece, int h, int l)
+// {
+//   int res = 1;
+//   if ( h + piece->hauteur >= HAUTEUR && l + piece->largeur >= LARGEUR) return 0;
+
+//   for (int i = piece->hauteur; i >= 0; i--)
+//   {
+//     for (int j = 0; j < piece->largeur; j++)
+//     {
+//       if (g[h-i][l+j] != ' ' && piece->forme[i][j] != ' ' ) res = 0;
+//     }
+//   }
+//   printf("res : %i\n hauteur : %i",res,h);
+//   return res;
+// }
+
+int estPosable(Grille g, Piece* p, int h, int col_g) {
+   
+ if ( h + p->hauteur >= HAUTEUR && col_g + p->largeur >= LARGEUR) return 0;
+
+  for (int i = h + p->hauteur; i >= h; i--) 
+  {
+    for(int j = col_g; j < col_g + p->largeur; j++) 
+    {
+      char s_grille = g[i][j];
+      char s_piece = p->forme[i%(p->hauteur-1)][j%(p->largeur-1)];
+      if (s_grille != ' ' && s_piece != ' ') return 0;
+    }
+  }
+  return 1;
+}
+
+int hauteurExacte( Grille g, int col_gauche, Piece* piece )
+{
+  // int plushaute = derniereCase(g,col_gauche);
+  // printf("%i",plushaute);
+  for (int h = 0; h < HAUTEUR; h++)
+  {
+    printf("co : %i \n",h);
+    if (estPosable(g, piece, h, col_gauche)) 
+    {
+      printf("posable /!\\\n");
+      return h;
+    }
+    else
+    {
+      printf("pas posable\n");
+    }
+  }
+  return 0;
+}
+
 int main(int argc, char const *argv[])
 {
   //
@@ -213,7 +283,7 @@ int main(int argc, char const *argv[])
     printf("\n");
 
     if (touche >= 0) {
-      int hp = hauteurPlat(g, touche, touche + p.largeur - 1);
+      int hp = hauteurExacte(g,touche,&p);
       if (estFini(p,hp))
       {
         printf("La partie est fini !!!\n");

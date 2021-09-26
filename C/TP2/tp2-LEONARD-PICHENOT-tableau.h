@@ -1,6 +1,6 @@
 #define HAUTEUR 12
 #define LARGEUR 16
-#define NB_PIECES 2
+#define NB_PIECES 3
 #define HAUTEUR_MAX_PIECES 4
 
 struct SPiece {
