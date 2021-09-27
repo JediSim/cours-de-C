@@ -69,14 +69,14 @@ void genererPieces(Piece* t)
   t[0].forme[2] = "I";
   t[0].forme[3] = "I";
   t[0].rotD = 1;
-  t[0].torG = 1;
+  t[0].rotG = 1;
 
   // IIII
   t[1].hauteur = 1;
   t[1].largeur = 4;
-  t[1].forme[1] = "IIII";
+  t[1].forme[0] = "IIII";
   t[1].rotD = 0;
-  t[1].torG = 0;
+  t[1].rotG = 0;
 
   // %%
   // %%
@@ -264,18 +264,30 @@ int main(int argc, char const *argv[])
   srand(time(NULL));
 
   int nbpieces = 0;
-  int touche;
+  int colonne;
+  char str[8]; // pourquoi ?
   do {
     Piece p = pieceAleatoire(pieces);
     affichePiece(p);
     afficheGrille(g);
 
-    printf("Choisir une colonne (-1 pour quitter) : ");
-    scanf("%i", &touche);
-    printf("\n");
+    while ( 1 ) {
+      printf( "(g)auche, (d)roite ou (0-%i) colonne: ", LARGEUR-1 );
+      if ( scanf( "%7s", str ) == 1 ) {
+        if ( str[ 0 ] == 'g' ) {  p = pieces[p.rotG]; }
+        else if ( str[ 0 ] == 'd' ) {  p = pieces[p.rotD]; }
+        else {
+          colonne = atoi( str );
+          break;
+        }
+        
+      }
+      affichePiece(p);
+      afficheGrille(g);
+    }
 
-    if (touche >= 0) {
-      int hp = hauteurExacte(g,touche,&p);
+    if (colonne >= 0) {
+      int hp = hauteurExacte(g,colonne,&p);
       if (estFini(p,hp))
       {
         printf("La partie est fini !!!\n");
@@ -284,11 +296,11 @@ int main(int argc, char const *argv[])
       }
       else
       {
-        ecrirePiece(g, p, hp, touche);
+        ecrirePiece(g, p, hp, colonne);
         nbpieces++;
         nettoyer(g);
       }
     }
-  } while(touche >= 0);
+  } while(colonne >= 0);
   return 0;
 }
