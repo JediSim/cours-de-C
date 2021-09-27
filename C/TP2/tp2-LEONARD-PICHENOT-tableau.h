@@ -7,6 +7,8 @@ struct SPiece {
   int   hauteur;
   int   largeur;
   char* forme[ HAUTEUR_MAX_PIECES ];
+  int rotD;
+  int rotG;
 };
 typedef struct SPiece Piece;
 

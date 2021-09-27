@@ -68,22 +68,64 @@ void genererPieces(Piece* t)
   t[0].forme[1] = "I";
   t[0].forme[2] = "I";
   t[0].forme[3] = "I";
+  t[0].rotD = 1;
+  t[0].torG = 1;
+
+  // IIII
+  t[1].hauteur = 1;
+  t[1].largeur = 4;
+  t[1].forme[1] = "IIII";
+  t[1].rotD = 0;
+  t[1].torG = 0;
 
   // %%
   // %%
-  t[1].hauteur = 2;
-  t[1].largeur = 2;
-  t[1].forme[0] = "%%";
-  t[1].forme[1] = "%%";
+  t[2].hauteur = 2;
+  t[2].largeur = 2;
+  t[2].forme[0] = "%%";
+  t[2].forme[1] = "%%";
+  t[2].rotD = 2;
+  t[2].rotG = 2;
 
   // LL
   //  L
   //  L
-  t[2].hauteur = 3;
-  t[2].largeur = 2;
-  t[2].forme[0] = "LL";
-  t[2].forme[1] = " L";
-  t[2].forme[2] = " L";
+  t[3].hauteur = 3;
+  t[3].largeur = 2;
+  t[3].forme[0] = "LL";
+  t[3].forme[1] = " L";
+  t[3].forme[2] = " L";
+  t[3].rotD = 4;
+  t[3].rotG = 6;
+
+  //   L
+  // LLL
+  t[4].hauteur = 2;
+  t[4].largeur = 3;
+  t[4].forme[0] = "  L";
+  t[4].forme[1] = "LLL";
+  t[4].rotD = 5;
+  t[4].rotG = 3;
+
+  // L
+  // L
+  // LL
+  t[5].hauteur = 3;
+  t[5].largeur = 2;
+  t[5].forme[0] = "L ";
+  t[5].forme[1] = "L ";
+  t[5].forme[2] = "LL";
+  t[5].rotD = 6;
+  t[5].rotG = 4;
+
+  // LLL
+  // L
+  t[6].hauteur = 2;
+  t[6].largeur = 3;
+  t[6].forme[0] = "LLL";
+  t[6].forme[1] = "L ";
+  t[6].rotD = 3;
+  t[6].rotG = 5;
 }
 
 void affichePiece(Piece p)
@@ -192,20 +234,9 @@ void nettoyer(Grille g)
   }
 }
 
-// int derniereCase(Grille g, int col)
-// {
-//   for (int h = HAUTEUR-1; h > 0; h--) 
-//   {
-//     if (g[h][col] != ' ') return h+1;
-//   }
-//   return 0;
-// }
-
 int estPosable(Grille g, Piece* piece, int h, int l)
 {
-  printf("\n POSABLE: h=%i l=%i\n",h,l);
   if ( h + piece->hauteur-1 >= HAUTEUR || l + piece->largeur-1 >= LARGEUR) return 0;
-  printf("\nPOSABLE: DANS INTERVALLE\n");
   for (int i = 0; i < piece->hauteur; i++)
   {
     for (int j = 0; j < piece->largeur; j++)
@@ -218,43 +249,13 @@ int estPosable(Grille g, Piece* piece, int h, int l)
 
 int hauteurExacte( Grille g, int col_gauche, Piece* piece )
 {
-  // int plushaute = derniereCase(g,col_gauche)+piece->hauteur-1;
-  // printf("%i",plushaute);
   int h = HAUTEUR-piece->hauteur;
   for(; estPosable(g, piece, h, col_gauche) && h >= 0; h--);
   return h+1;
-
-
-  // for (int h = 0; h < HAUTEUR; h++)
-  // {
-  //   printf("co : %i \n",h);
-  //   if (estPosable(g, piece, h, col_gauche)) 
-  //   {
-  //     printf("posable /!\\\n");
-  //     return h;
-  //   }
-  //   else
-  //   {
-  //     printf("pas posable\n");
-  //   }
-  // }
-  // return 0;
 }
 
 int main(int argc, char const *argv[])
 {
-  //
-  // ecrireCase(g,0,5,'b');
-  // printf("Hauteur max : %i\n", hauteurPlat(g, 3, 4));
-  // afficheGrille( g );
-  //
-  // int hp = hauteurPlat(g, 3, 3+pieces[1].largeur-1);
-  // printf("%i\n", hp);
-  // ecrirePiece(g,pieces[1],hp,3);
-  // afficheGrille( g );
-  // affichePiece(pieceAleatoire(pieces));
-  //
-
   // Init
   Grille g;
   Piece pieces[NB_PIECES];
