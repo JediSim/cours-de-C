@@ -121,7 +121,7 @@ int hauteurPlat(Grille g, int l1, int l2)
 
 void ecrirePiece(Grille g, Piece p, int h, int l)
 {
-  if (l+p.largeur-1 < LARGEUR)
+  if (l+p.largeur-1 < LARGEUR) // @TODO: useless?
   {
     for (int i = 0; i < p.hauteur; i++)
     {
@@ -129,7 +129,7 @@ void ecrirePiece(Grille g, Piece p, int h, int l)
       {
         if (p.forme[i][j] != ' ')
         {
-          ecrireCase(g,h-i,l+j,p.forme[i][j]);
+          ecrireCase(g,h+p.hauteur-1-i,l+j,p.forme[i][j]);
         }  
       }
       // h++;
@@ -192,65 +192,53 @@ void nettoyer(Grille g)
   }
 }
 
-int derniereCase(Grille g, int col)
-{
-  for (int h = HAUTEUR-1; h > 0; h--) 
-  {
-    if (g[h][col] != ' ') return h+1;
-  }
-  return 0;
-}
+// int derniereCase(Grille g, int col)
+// {
+//   for (int h = HAUTEUR-1; h > 0; h--) 
+//   {
+//     if (g[h][col] != ' ') return h+1;
+//   }
+//   return 0;
+// }
 
 int estPosable(Grille g, Piece* piece, int h, int l)
 {
-  int res = 1;
-  if ( h - piece->hauteur+1 < 0 || l + piece->largeur >= LARGEUR) return 0;
-
-  for (int i = h; i < piece->hauteur; i++)
+  printf("\n POSABLE: h=%i l=%i\n",h,l);
+  if ( h + piece->hauteur-1 >= HAUTEUR || l + piece->largeur-1 >= LARGEUR) return 0;
+  printf("\nPOSABLE: DANS INTERVALLE\n");
+  for (int i = 0; i < piece->hauteur; i++)
   {
     for (int j = 0; j < piece->largeur; j++)
     {
-      if (g[h+i][l+j] != ' ' && piece->forme[i][j] != ' ' ) res = 0;
+      if (g[h+piece->hauteur-1-i][l+j] != ' ' && piece->forme[i][j] != ' ' ) return 0;
     }
   }
-  printf("res : %i\n hauteur : %i",res,h);
-  return res;
+  return 1;
 }
-
-// int estPosable(Grille g, Piece* p, int h, int col_g) {
-   
-//  if ( h + p->hauteur >= HAUTEUR && col_g + p->largeur >= LARGEUR) return 0;
-
-//   for (int i = h + p->hauteur; i >= h; i--) 
-//   {
-//     for(int j = col_g; j < col_g + p->largeur; j++) 
-//     {
-//       char s_grille = g[i][j];
-//       char s_piece = p->forme[i%(p->hauteur-1)][j%(p->largeur-1)];
-//       if (s_grille != ' ' && s_piece != ' ') return 0;
-//     }
-//   }
-//   return 1;
-// }
 
 int hauteurExacte( Grille g, int col_gauche, Piece* piece )
 {
   // int plushaute = derniereCase(g,col_gauche)+piece->hauteur-1;
   // printf("%i",plushaute);
-  for (int h = 0; h < HAUTEUR; h++)
-  {
-    printf("co : %i \n",h);
-    if (estPosable(g, piece, h, col_gauche)) 
-    {
-      printf("posable /!\\\n");
-      return h;
-    }
-    else
-    {
-      printf("pas posable\n");
-    }
-  }
-  return 0;
+  int h = HAUTEUR-piece->hauteur;
+  for(; estPosable(g, piece, h, col_gauche) && h >= 0; h--);
+  return h+1;
+
+
+  // for (int h = 0; h < HAUTEUR; h++)
+  // {
+  //   printf("co : %i \n",h);
+  //   if (estPosable(g, piece, h, col_gauche)) 
+  //   {
+  //     printf("posable /!\\\n");
+  //     return h;
+  //   }
+  //   else
+  //   {
+  //     printf("pas posable\n");
+  //   }
+  // }
+  // return 0;
 }
 
 int main(int argc, char const *argv[])
