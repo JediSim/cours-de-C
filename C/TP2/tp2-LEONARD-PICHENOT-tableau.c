@@ -200,12 +200,14 @@ void supprimerLigne(Grille g, int h)
   {
     for (int l = 0; l < LARGEUR; l++)
     {
-      g[h][l] = g[h+1][l];
+      ecrireCase(g,h,l,lireCase(g,h+1,l));
+      // g[h][l] = g[h+1][l];
     }
   }
   for (int l = 0; l < LARGEUR; l++)
   {
-    g[h][l] = ' ';
+    ecrireCase(g,h,l,' ');
+    // g[h][l] = ' ';
   }
 }
 
@@ -214,7 +216,8 @@ int estPleine(Grille g, int h)
   int plein = 1;
   for (int l = 0; l < LARGEUR; l++)
   {
-    if (g[h][l] == ' ')
+    // g[h][l] 
+    if (lireCase(g,h,l) == ' ')
     {
       plein = 0;
     }
@@ -241,7 +244,8 @@ int estPosable(Grille g, Piece* piece, int h, int l)
   {
     for (int j = 0; j < piece->largeur; j++)
     {
-      if (g[h+piece->hauteur-1-i][l+j] != ' ' && piece->forme[i][j] != ' ' ) return 0;
+      if (lireCase(g,h+piece->hauteur-1-i,l+j) != ' ' && piece->forme[i][j] != ' ' ) return 0;
+      // g[h+piece->hauteur-1-i][l+j] 
     }
   }
   return 1;

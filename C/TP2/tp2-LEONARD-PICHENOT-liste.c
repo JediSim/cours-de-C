@@ -4,15 +4,43 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "tp2-LEONARD-PICHENOT-tableau.h"
-
+#include "Liste_tetris.h"
+#include "tp2-LEONARD-PICHENOT-liste.h"
+void affiche( Liste* L )
+{
+    Adr A;
+    printf("coucou11111\n");
+    printf("%f val debut\n",Liste_debut( L )->val);
+    printf("%f val suiv\n",Liste_suivant( L , Liste_debut( L ))->val);
+    printf("%i val suiv\n",Liste_suivant( L , Liste_debut( L )) == Liste_fin( L ));
+    for ( A = Liste_debut( L ); A != Liste_fin( L );
+            A = Liste_suivant( L, A ) )
+        printf( " %c | ", Liste_valeur( L, A )[0] );
+    printf( "\n" );
+}
 void initialiseGrille(Grille g)
 {
-  for (int h = 0; h < HAUTEUR; h++) {
-    for (int l = 0; l < LARGEUR; l++) {
-      g[h][l] = ' ';
+  // for (int h = 0; h < HAUTEUR; h++) {
+  //   for (int l = 0; l < LARGEUR; l++) {
+  //     g[h][l] = ' ';
+  //   }
+  // }
+  
+  g = Liste_creer();
+  Adr A = Liste_debut(g);
+  for ( int i = 0; i < HAUTEUR; i++ )
+  {
+    char ligne[LARGEUR];
+    for (int j = 0; j < LARGEUR; j++)
+    {
+      ligne[j] = ' ';
     }
+    A->succ = Liste_insere( g, A, ligne );
+    A = Liste_suivant( g, A );
   }
+  A->succ = g;
+  g->pred = A;
+  affiche(g);
 }
 
 int estValide(Grille g, int h, int l)
@@ -24,7 +52,15 @@ char lireCase(Grille g, int h, int l)
 {
   if (estValide(g, h, l))
   {
-    return g[h][l];
+    Adr A = Liste_debut(g);
+    for (int i = 0; i <= h; i++)
+    {
+      printf("coucou");
+      A = Liste_suivant(g, A);
+      printf(" val %c\n",Liste_valeur(g,A)[l]);
+    }
+    printf(" val %c\n",Liste_valeur(g,A)[l]);
+    return Liste_valeur(g,A)[l];
   }
   else
   {
@@ -68,13 +104,64 @@ void genererPieces(Piece* t)
   t[0].forme[1] = "I";
   t[0].forme[2] = "I";
   t[0].forme[3] = "I";
+  t[0].rotD = 1;
+  t[0].rotG = 1;
+
+  // IIII
+  t[1].hauteur = 1;
+  t[1].largeur = 4;
+  t[1].forme[0] = "IIII";
+  t[1].rotD = 0;
+  t[1].rotG = 0;
 
   // %%
   // %%
-  t[1].hauteur = 2;
-  t[1].largeur = 2;
-  t[1].forme[0] = "%%";
-  t[1].forme[1] = "%%";
+  t[2].hauteur = 2;
+  t[2].largeur = 2;
+  t[2].forme[0] = "%%";
+  t[2].forme[1] = "%%";
+  t[2].rotD = 2;
+  t[2].rotG = 2;
+
+  // LL
+  //  L
+  //  L
+  t[3].hauteur = 3;
+  t[3].largeur = 2;
+  t[3].forme[0] = "LL";
+  t[3].forme[1] = " L";
+  t[3].forme[2] = " L";
+  t[3].rotD = 4;
+  t[3].rotG = 6;
+
+  //   L
+  // LLL
+  t[4].hauteur = 2;
+  t[4].largeur = 3;
+  t[4].forme[0] = "  L";
+  t[4].forme[1] = "LLL";
+  t[4].rotD = 5;
+  t[4].rotG = 3;
+
+  // L
+  // L
+  // LL
+  t[5].hauteur = 3;
+  t[5].largeur = 2;
+  t[5].forme[0] = "L ";
+  t[5].forme[1] = "L ";
+  t[5].forme[2] = "LL";
+  t[5].rotD = 6;
+  t[5].rotG = 4;
+
+  // LLL
+  // L
+  t[6].hauteur = 2;
+  t[6].largeur = 3;
+  t[6].forme[0] = "LLL";
+  t[6].forme[1] = "L ";
+  t[6].rotD = 3;
+  t[6].rotG = 5;
 }
 
 void affichePiece(Piece p)
@@ -89,7 +176,12 @@ void ecrireCase(Grille g, int h, int l, char c)
 {
   if (estValide(g, h, l))
   {
-    g[h][l] = c;
+    Adr A;
+    for (int i = 0; i < h; i++)
+    {
+      A = Liste_suivant(g, A);
+    }
+    A->val[l]=c;
   }
   else
   {
@@ -97,30 +189,33 @@ void ecrireCase(Grille g, int h, int l, char c)
   }
 }
 
-int hauteurPlat(Grille g, int l1, int l2)
-{
-  // @TODO : test largeur
-  for (int h = HAUTEUR-1; h >= 0; h--) {
-    for (int l = l1; l <= l2; l++) {
-      if (g[h][l] != ' ') {
-        return h+1;
-      }
-    }
-  }
-  return 0;
-}
+// int hauteurPlat(Grille g, int l1, int l2)
+// {
+//   // @TODO : test largeur
+//   for (int h = HAUTEUR-1; h >= 0; h--) {
+//     for (int l = l1; l <= l2; l++) {
+//       if (g[h][l] != ' ') {
+//         return h+1;
+//       }
+//     }
+//   }
+//   return 0;
+// }
 
 void ecrirePiece(Grille g, Piece p, int h, int l)
 {
-  if (l+p.largeur-1 < LARGEUR)
+  if (l+p.largeur-1 < LARGEUR) // @TODO: useless?
   {
-    for (int i = p.hauteur-1; i >= 0; i--)
+    for (int i = 0; i < p.hauteur; i++)
     {
       for (int j = 0; j < p.largeur; j++)
       {
-        ecrireCase(g,h,l+j,p.forme[i][j]);
+        if (p.forme[i][j] != ' ')
+        {
+          ecrireCase(g,h+p.hauteur-1-i,l+j,p.forme[i][j]);
+        }  
       }
-      h++;
+      // h++;
     }
   }
   else
@@ -146,12 +241,14 @@ void supprimerLigne(Grille g, int h)
   {
     for (int l = 0; l < LARGEUR; l++)
     {
-      g[h][l] = g[h+1][l];
+      ecrireCase(g,h,l,lireCase(g,h+1,l));
+      // g[h][l] = g[h+1][l];
     }
   }
   for (int l = 0; l < LARGEUR; l++)
   {
-    g[h][l] = ' ';
+    ecrireCase(g,h,l,' ');
+    // g[h][l] = ' ';
   }
 }
 
@@ -160,7 +257,8 @@ int estPleine(Grille g, int h)
   int plein = 1;
   for (int l = 0; l < LARGEUR; l++)
   {
-    if (g[h][l] == ' ')
+    // g[h][l] 
+    if (lireCase(g,h,l) == ' ')
     {
       plein = 0;
     }
@@ -180,20 +278,29 @@ void nettoyer(Grille g)
   }
 }
 
+int estPosable(Grille g, Piece* piece, int h, int l)
+{
+  if ( h + piece->hauteur-1 >= HAUTEUR || l + piece->largeur-1 >= LARGEUR) return 0;
+  for (int i = 0; i < piece->hauteur; i++)
+  {
+    for (int j = 0; j < piece->largeur; j++)
+    {
+      if (lireCase(g,h+piece->hauteur-1-i,l+j) != ' ' && piece->forme[i][j] != ' ' ) return 0;
+      // g[h+piece->hauteur-1-i][l+j] 
+    }
+  }
+  return 1;
+}
+
+int hauteurExacte( Grille g, int col_gauche, Piece* piece )
+{
+  int h = HAUTEUR-piece->hauteur;
+  for(; estPosable(g, piece, h, col_gauche) && h >= 0; h--);
+  return h+1;
+}
+
 int main(int argc, char const *argv[])
 {
-  //
-  // ecrireCase(g,0,5,'b');
-  // printf("Hauteur max : %i\n", hauteurPlat(g, 3, 4));
-  // afficheGrille( g );
-  //
-  // int hp = hauteurPlat(g, 3, 3+pieces[1].largeur-1);
-  // printf("%i\n", hp);
-  // ecrirePiece(g,pieces[1],hp,3);
-  // afficheGrille( g );
-  // affichePiece(pieceAleatoire(pieces));
-  //
-
   // Init
   Grille g;
   Piece pieces[NB_PIECES];
@@ -202,31 +309,50 @@ int main(int argc, char const *argv[])
   srand(time(NULL));
 
   int nbpieces = 0;
-  int touche;
+  int colonne;
+  char str[8]; // pourquoi ?
   do {
     Piece p = pieceAleatoire(pieces);
     affichePiece(p);
     afficheGrille(g);
 
-    printf("Choisir une colonne (-1 pour quitter) : ");
-    scanf("%i", &touche);
-    printf("\n");
+    while ( 1 ) {
+      printf( "(g)auche, (d)roite ou (0-%i) colonne: ", LARGEUR-1 );
+      if ( scanf( "%7s", str ) == 1 ) {
+        if ( str[ 0 ] == 'g' ) {  p = pieces[p.rotG]; }
+        else if ( str[ 0 ] == 'd' ) {  p = pieces[p.rotD]; }
+        else {
+          colonne = atoi( str );
+          break;
+        }
+        
+      }
+      affichePiece(p);
+      afficheGrille(g);
+    }
 
-    if (touche >= 0) {
-      int hp = hauteurPlat(g, touche, touche + p.largeur - 1);
-      if (estFini(p,hp))
+    if (colonne >= 0) {
+      int hp = hauteurExacte(g,colonne,&p);
+      if (estPosable(g, &p, hp, colonne))
       {
-        printf("La partie est fini !!!\n");
-        printf("nombre de pieces : %i\n",nbpieces);
-        initialiseGrille( g );
+        if (estFini(p,hp))
+        {
+          printf("La partie est fini !!!\n");
+          printf("nombre de pieces : %i\n",nbpieces);
+          initialiseGrille( g );
+        }
+        else
+        {
+          ecrirePiece(g, p, hp, colonne);
+          nbpieces++;
+          nettoyer(g);
+        }
       }
       else
       {
-        ecrirePiece(g, p, hp, touche);
-        nbpieces++;
-        nettoyer(g);
+        printf("La piece n'est pas posable\n");
       }
     }
-  } while(touche >= 0);
+  } while(colonne >= 0);
   return 0;
 }
