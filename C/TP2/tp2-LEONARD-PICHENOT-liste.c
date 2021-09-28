@@ -56,7 +56,7 @@ char lireCase(Grille g, int h, int l)
     for (int i = 0; i <= h; i++)
     {
       printf("coucou");
-      A = Liste_suivant(g, A);
+      A = Liste_suivant(g, A); //------------------------------------/!\ bug sur cette ligne /!\------
       printf(" val %c\n",Liste_valeur(g,A)[l]);
     }
     printf(" val %c\n",Liste_valeur(g,A)[l]);
