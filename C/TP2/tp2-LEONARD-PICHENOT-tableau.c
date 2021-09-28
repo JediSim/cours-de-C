@@ -288,17 +288,24 @@ int main(int argc, char const *argv[])
 
     if (colonne >= 0) {
       int hp = hauteurExacte(g,colonne,&p);
-      if (estFini(p,hp))
+      if (estPosable(g, &p, hp, colonne))
       {
-        printf("La partie est fini !!!\n");
-        printf("nombre de pieces : %i\n",nbpieces);
-        initialiseGrille( g );
+        if (estFini(p,hp))
+        {
+          printf("La partie est fini !!!\n");
+          printf("nombre de pieces : %i\n",nbpieces);
+          initialiseGrille( g );
+        }
+        else
+        {
+          ecrirePiece(g, p, hp, colonne);
+          nbpieces++;
+          nettoyer(g);
+        }
       }
       else
       {
-        ecrirePiece(g, p, hp, colonne);
-        nbpieces++;
-        nettoyer(g);
+        printf("La piece n'est pas posable\n");
       }
     }
   } while(colonne >= 0);

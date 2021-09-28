@@ -40,7 +40,7 @@ Adr Liste_insere( Liste* L, Adr A, Elem v )
 {
     Adr ncell = (Adr) malloc( sizeof( Cellule ) );
     ncell->val = v;
-    ncell->succ = A;
+    ncell->pred = A;
     return ncell;
 }
 void Liste_supprime( Liste* L, Adr A )
