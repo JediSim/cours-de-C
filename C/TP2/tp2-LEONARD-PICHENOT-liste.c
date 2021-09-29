@@ -17,7 +17,9 @@ void initialiseGrille(Grille* g)
   // --------------------------------verifier qu'il y a bien quelque chose meme en dehors de la fct
   // g = Liste_debut(g);
   Adr A = Liste_debut(g);
+  printf("coucou");
   A = Liste_suivant( g, A );
+  printf("coucou");
   for ( int i = 0; i < HAUTEUR; i++ )
   {
     printf("%i",i);
@@ -322,8 +324,8 @@ void affiche( Liste* L )
 {
     Adr A;
     printf("coucou11111\n");
-    printf("%f val debut\n",Liste_debut( L )->val);
-    printf("%f val suiv\n",Liste_suivant( L , Liste_debut( L ))->val);
+    printf("%c val debut\n",Liste_debut( L )->val[0]);
+    printf("%c val suiv\n",Liste_suivant( L , Liste_debut( L ))->val[0]);
     printf("%i val suiv\n",Liste_suivant( L , Liste_debut( L )) == Liste_fin( L ));
     for ( A = Liste_debut( L ); A != Liste_fin( L );
             A = Liste_suivant( L, A ) )
@@ -340,6 +342,7 @@ int main(int argc, char const *argv[])
   affiche(g);
   Piece pieces[NB_PIECES];
   genererPieces( pieces );
+  printf("ca marche");
   initialiseGrille( g );
   afficheGrille(g);
 
