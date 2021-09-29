@@ -6,41 +6,48 @@
 
 #include "Liste_tetris.h"
 #include "tp2-LEONARD-PICHENOT-liste.h"
-void affiche( Liste* L )
-{
-    Adr A;
-    printf("coucou11111\n");
-    printf("%f val debut\n",Liste_debut( L )->val);
-    printf("%f val suiv\n",Liste_suivant( L , Liste_debut( L ))->val);
-    printf("%i val suiv\n",Liste_suivant( L , Liste_debut( L )) == Liste_fin( L ));
-    for ( A = Liste_debut( L ); A != Liste_fin( L );
-            A = Liste_suivant( L, A ) )
-        printf( " %c | ", Liste_valeur( L, A )[0] );
-    printf( "\n" );
-}
+
 void initialiseGrille(Grille g)
 {
-  // for (int h = 0; h < HAUTEUR; h++) {
-  //   for (int l = 0; l < LARGEUR; l++) {
-  //     g[h][l] = ' ';
+  // // for (int h = 0; h < HAUTEUR; h++) {
+  // //   for (int l = 0; l < LARGEUR; l++) {
+  // //     g[h][l] = ' ';
+  // //   }
+  // // }
+  // // --------------------------------verifier qu'il y a bien quelque chose meme en dehors de la fct
+  // g = Liste_creer();
+  // Adr A = Liste_debut(g);
+  // for ( int i = 0; i < HAUTEUR; i++ )
+  // {
+  //   char ligne[LARGEUR];
+  //   for (int j = 0; j < LARGEUR; j++)
+  //   {
+  //     ligne[j] = ' ';
   //   }
+  //   A->succ = Liste_insere( g, A, ligne );
+  //   A = Liste_suivant( g, A );
   // }
-  // --------------------------------verifier qu'il y a bien quelque chose meme en dehors de la fct
-  g = Liste_creer();
-  Adr A = Liste_debut(g);
+  // A->succ = g;
+  // g->pred = A;
+  // affiche(g);
+}
+Grille construireGrille()
+{
+  Grille g = Liste_creer();
+  Adr A =Liste_debut(g);
   for ( int i = 0; i < HAUTEUR; i++ )
   {
-    char ligne[LARGEUR];
-    for (int j = 0; j < LARGEUR; j++)
-    {
-      ligne[j] = ' ';
-    }
-    A->succ = Liste_insere( g, A, ligne );
+    char* ligne = (char*)malloc(LARGEUR+1*sizeof(char));
+    A->succ = Liste_insere(g,A,ligne);
     A = Liste_suivant( g, A );
   }
   A->succ = g;
   g->pred = A;
-  affiche(g);
+  return g;
+}
+void détruireGrille(Grille g)
+{
+  
 }
 
 int estValide(Grille g, int h, int l)
