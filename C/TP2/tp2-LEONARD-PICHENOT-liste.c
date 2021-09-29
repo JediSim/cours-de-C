@@ -25,7 +25,7 @@ void initialiseGrille(Grille g)
   //     g[h][l] = ' ';
   //   }
   // }
-  
+  // --------------------------------verifier qu'il y a bien quelque chose meme en dehors de la fct
   g = Liste_creer();
   Adr A = Liste_debut(g);
   for ( int i = 0; i < HAUTEUR; i++ )
