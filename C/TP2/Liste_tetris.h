@@ -3,7 +3,7 @@
 
 typedef char* Elem; /* Vous changerez après ce type lorsque vous l'utiliserez pour le tetris */
 struct SCellule {
-    Elem val;
+    char* val;
     struct SCellule* pred;
     struct SCellule* succ;
 };
@@ -32,7 +32,7 @@ extern Adr Liste_insere( Liste* L, Adr A, Elem v );
 /* supprime l'élément A dans L. */
 extern void Liste_supprime( Liste* L, Adr A );
 /* retourne la valeur stockée dans l'élément A de la liste L. */
-extern Elem Liste_valeur( Liste* L, Adr A );
+extern char* Liste_valeur( Liste* L, Adr A );
 /* modifie la valeur stockée dans l'élément A de la liste L, en lui assignant la valeur v. */
 extern void Liste_modifie( Liste* L, Adr A, Elem v );
 #endif

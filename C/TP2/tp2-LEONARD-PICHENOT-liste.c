@@ -7,34 +7,33 @@
 #include "Liste_tetris.h"
 #include "tp2-LEONARD-PICHENOT-liste.h"
 
-void initialiseGrille(Grille g)
+void initialiseGrille(Grille* g)
 {
-  // // for (int h = 0; h < HAUTEUR; h++) {
-  // //   for (int l = 0; l < LARGEUR; l++) {
-  // //     g[h][l] = ' ';
-  // //   }
-  // // }
-  // // --------------------------------verifier qu'il y a bien quelque chose meme en dehors de la fct
-  // g = Liste_creer();
-  // Adr A = Liste_debut(g);
-  // for ( int i = 0; i < HAUTEUR; i++ )
-  // {
-  //   char ligne[LARGEUR];
-  //   for (int j = 0; j < LARGEUR; j++)
-  //   {
-  //     ligne[j] = ' ';
+  // for (int h = 0; h < HAUTEUR; h++) {
+  //   for (int l = 0; l < LARGEUR; l++) {
+  //     g[h][l] = ' ';
   //   }
-  //   A->succ = Liste_insere( g, A, ligne );
-  //   A = Liste_suivant( g, A );
   // }
-  // A->succ = g;
-  // g->pred = A;
-  // affiche(g);
+  // --------------------------------verifier qu'il y a bien quelque chose meme en dehors de la fct
+  // g = Liste_debut(g);
+  Adr A = Liste_debut(g);
+  A = Liste_suivant( g, A );
+  for ( int i = 0; i < HAUTEUR; i++ )
+  {
+    printf("%i",i);
+    for (int j = 0; j < LARGEUR; j++)
+    {
+      printf("%i",j);
+      ecrireCase(A,i,j,' ');
+    }
+    A = Liste_suivant( g, A );
+  }
 }
-Grille construireGrille()
+
+Grille* construireGrille()
 {
-  Grille g = Liste_creer();
-  Adr A =Liste_debut(g);
+  Grille* g = Liste_creer();
+  Adr A = Liste_debut(g);
   for ( int i = 0; i < HAUTEUR; i++ )
   {
     char* ligne = (char*)malloc(LARGEUR+1*sizeof(char));
@@ -45,28 +44,35 @@ Grille construireGrille()
   g->pred = A;
   return g;
 }
-void détruireGrille(Grille g)
+
+void detruireGrille(Grille* g)
 {
-  
+  Adr A = Liste_debut(g);
+  for (int i = 0; i < HAUTEUR; i++)
+  {
+    A = Liste_suivant( g, A );
+    free(A->val);
+  }
+  free(g);
 }
 
-int estValide(Grille g, int h, int l)
+int estValide(Grille* g, int h, int l)
 {
   return l < LARGEUR && l >= 0 && h < HAUTEUR && h >= 0;
 }
 
-char lireCase(Grille g, int h, int l)
+char lireCase(Adr A, Grille* g, int h, int l)
 {
   if (estValide(g, h, l))
   {
-    Adr A = Liste_debut(g);
-    for (int i = 0; i <= h; i++)
-    {
-      printf("coucou");
-      A = Liste_suivant(g, A); //------------------------------------/!\ bug sur cette ligne /!\------
-      printf(" val %c\n",Liste_valeur(g,A)[l]);
-    }
-    printf(" val %c\n",Liste_valeur(g,A)[l]);
+    // Adr A = Liste_debut(g);
+    // for (int i = 0; i <= h; i++)
+    // {
+    //   printf("coucou");
+    //   A = Liste_suivant(g, A); //------------------------------------/!\ bug sur cette ligne /!\------
+    //   printf(" val %c\n",Liste_valeur(g,A)[l]);
+    // }
+    // printf(" val %c\n",Liste_valeur(g,A)[l]);
     return Liste_valeur(g,A)[l];
   }
   else
@@ -76,14 +82,16 @@ char lireCase(Grille g, int h, int l)
   }
 }
 
-void afficheGrille(Grille g)
+void afficheGrille(Grille* g)
 {
+  Adr A = Liste_debut(g);
   for (int h = HAUTEUR-1; h >= 0; h--) {
     printf("||");
     for (int l = 0; l < LARGEUR; l++) {
-      printf("%c", lireCase(g, h, l));
+      printf("%c", lireCase(A,g, h, l));
     }
     printf("||\n");
+    A = Liste_suivant(g,A);
   }
 
   // floor
@@ -179,16 +187,13 @@ void affichePiece(Piece p)
   printf("↑\n");
 }
 
-void ecrireCase(Grille g, int h, int l, char c)
+void ecrireCase(Adr A, int h, int l, char c)
 {
-  if (estValide(g, h, l))
+  if (estValide(A, h, l))
   {
-    Adr A;
-    for (int i = 0; i < h; i++)
-    {
-      A = Liste_suivant(g, A);
-    }
-    A->val[l]=c;
+    char* ligne = A->val;
+    *(ligne+l) = c; //-------------------------------------------plante ici
+    Liste_modifie(A,A,ligne);
   }
   else
   {
@@ -209,7 +214,7 @@ void ecrireCase(Grille g, int h, int l, char c)
 //   return 0;
 // }
 
-void ecrirePiece(Grille g, Piece p, int h, int l)
+void ecrirePiece(Grille* g, Piece p, int h, int l)
 {
   if (l+p.largeur-1 < LARGEUR) // @TODO: useless?
   {
@@ -242,15 +247,18 @@ int estFini(Piece p, int h)
   return (p.hauteur + h) >= HAUTEUR;
 }
 
-void supprimerLigne(Grille g, int h)
+void supprimerLigne(Grille* g, int h)
 {
+  Adr A = Liste_debut(g);
   for (; h < HAUTEUR-1; h++)
   {
     for (int l = 0; l < LARGEUR; l++)
     {
-      ecrireCase(g,h,l,lireCase(g,h+1,l));
+      ecrireCase(g,h,l,lireCase(A,g,h+1,l));
       // g[h][l] = g[h+1][l];
     }
+    A = Liste_suivant(g,A);
+
   }
   for (int l = 0; l < LARGEUR; l++)
   {
@@ -259,21 +267,23 @@ void supprimerLigne(Grille g, int h)
   }
 }
 
-int estPleine(Grille g, int h)
+int estPleine(Grille* g, int h)
 {
+  Adr A = Liste_debut(g);
   int plein = 1;
   for (int l = 0; l < LARGEUR; l++)
   {
     // g[h][l] 
-    if (lireCase(g,h,l) == ' ')
+    if (lireCase(A,g,h,l) == ' ')
     {
       plein = 0;
     }
+    A = Liste_suivant(g,A);
   }
   return plein;
 }
 
-void nettoyer(Grille g)
+void nettoyer(Grille* g)
 {
   for (int h = 0; h < HAUTEUR; h++)
   {
@@ -285,34 +295,54 @@ void nettoyer(Grille g)
   }
 }
 
-int estPosable(Grille g, Piece* piece, int h, int l)
+int estPosable(Grille* g, Piece* piece, int h, int l)
 {
+  Adr A = Liste_debut(g);
   if ( h + piece->hauteur-1 >= HAUTEUR || l + piece->largeur-1 >= LARGEUR) return 0;
   for (int i = 0; i < piece->hauteur; i++)
   {
     for (int j = 0; j < piece->largeur; j++)
     {
-      if (lireCase(g,h+piece->hauteur-1-i,l+j) != ' ' && piece->forme[i][j] != ' ' ) return 0;
+      if (lireCase(A,g,h+piece->hauteur-1-i,l+j) != ' ' && piece->forme[i][j] != ' ' ) return 0;
       // g[h+piece->hauteur-1-i][l+j] 
     }
+    A = Liste_suivant(g,A);
   }
   return 1;
 }
 
-int hauteurExacte( Grille g, int col_gauche, Piece* piece )
+int hauteurExacte( Grille* g, int col_gauche, Piece* piece )
 {
   int h = HAUTEUR-piece->hauteur;
   for(; estPosable(g, piece, h, col_gauche) && h >= 0; h--);
   return h+1;
 }
 
+void affiche( Liste* L )
+{
+    Adr A;
+    printf("coucou11111\n");
+    printf("%f val debut\n",Liste_debut( L )->val);
+    printf("%f val suiv\n",Liste_suivant( L , Liste_debut( L ))->val);
+    printf("%i val suiv\n",Liste_suivant( L , Liste_debut( L )) == Liste_fin( L ));
+    for ( A = Liste_debut( L ); A != Liste_fin( L );
+            A = Liste_suivant( L, A ) )
+        printf( "%c | ", Liste_valeur( L, A )[0] );
+    printf( "\n" );
+    A->succ->val[1] = '1';
+}
+
 int main(int argc, char const *argv[])
 {
   // Init
-  Grille g;
+  Grille* g = construireGrille();
+  Liste_suivant(g,Liste_debut(g))->val[0] = '1';
+  affiche(g);
   Piece pieces[NB_PIECES];
   genererPieces( pieces );
   initialiseGrille( g );
+  afficheGrille(g);
+
   srand(time(NULL));
 
   int nbpieces = 0;
@@ -361,5 +391,6 @@ int main(int argc, char const *argv[])
       }
     }
   } while(colonne >= 0);
+  detruireGrille(g);
   return 0;
 }

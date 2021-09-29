@@ -12,18 +12,18 @@ struct SPiece {
 };
 typedef struct SPiece Piece;
 
-typedef Liste* Grille;
+typedef Liste Grille;
 
-void initialiseGrille(Grille g);
+void initialiseGrille(Grille* g);
 
-int estValide(Grille g, int h, int l);
+int estValide(Grille* g, int h, int l);
 
-char lireCase(Grille g, int lgn, int col);
+char lireCase(Adr A, Grille* g, int lgn, int col);
 
-void afficheGrille(Grille g);
+void afficheGrille(Grille* g);
 
 void genererPieces(Piece* t);
 
 void affichePiece(Piece p);
 
-void ecrireCase(Grille g, int h, int l, char c);
+void ecrireCase(Grille* g, int h, int l, char c);
