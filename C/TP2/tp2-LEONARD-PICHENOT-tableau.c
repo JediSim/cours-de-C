@@ -123,7 +123,7 @@ void genererPieces(Piece* t)
   t[6].hauteur = 2;
   t[6].largeur = 3;
   t[6].forme[0] = "LLL";
-  t[6].forme[1] = "L ";
+  t[6].forme[1] = "L  ";
   t[6].rotD = 3;
   t[6].rotG = 5;
 }
