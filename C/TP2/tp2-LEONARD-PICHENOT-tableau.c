@@ -200,12 +200,14 @@ void supprimerLigne(Grille g, int h)
   {
     for (int l = 0; l < LARGEUR; l++)
     {
-      g[h][l] = g[h+1][l];
+      ecrireCase(g,h,l,lireCase(g,h+1,l));
+      // g[h][l] = g[h+1][l];
     }
   }
   for (int l = 0; l < LARGEUR; l++)
   {
-    g[h][l] = ' ';
+    ecrireCase(g,h,l,' ');
+    // g[h][l] = ' ';
   }
 }
 
@@ -214,7 +216,8 @@ int estPleine(Grille g, int h)
   int plein = 1;
   for (int l = 0; l < LARGEUR; l++)
   {
-    if (g[h][l] == ' ')
+    // g[h][l] 
+    if (lireCase(g,h,l) == ' ')
     {
       plein = 0;
     }
@@ -241,7 +244,8 @@ int estPosable(Grille g, Piece* piece, int h, int l)
   {
     for (int j = 0; j < piece->largeur; j++)
     {
-      if (g[h+piece->hauteur-1-i][l+j] != ' ' && piece->forme[i][j] != ' ' ) return 0;
+      if (lireCase(g,h+piece->hauteur-1-i,l+j) != ' ' && piece->forme[i][j] != ' ' ) return 0;
+      // g[h+piece->hauteur-1-i][l+j] 
     }
   }
   return 1;
@@ -288,17 +292,24 @@ int main(int argc, char const *argv[])
 
     if (colonne >= 0) {
       int hp = hauteurExacte(g,colonne,&p);
-      if (estFini(p,hp))
+      if (estPosable(g, &p, hp, colonne))
       {
-        printf("La partie est fini !!!\n");
-        printf("nombre de pieces : %i\n",nbpieces);
-        initialiseGrille( g );
+        if (estFini(p,hp))
+        {
+          printf("La partie est fini !!!\n");
+          printf("nombre de pieces : %i\n",nbpieces);
+          initialiseGrille( g );
+        }
+        else
+        {
+          ecrirePiece(g, p, hp, colonne);
+          nbpieces++;
+          nettoyer(g);
+        }
       }
       else
       {
-        ecrirePiece(g, p, hp, colonne);
-        nbpieces++;
-        nettoyer(g);
+        printf("La piece n'est pas posable\n");
       }
     }
   } while(colonne >= 0);
