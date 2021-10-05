@@ -40,6 +40,9 @@ position(petit_dejeuner,salon).
 %action
 action(douche,non).
 action(petit_dejeuner,non).
+action(cookie,non).
+action(muffin,non).
+action(formule_dej,non).
 
 
 %passages
@@ -269,7 +272,7 @@ decrire(pc) :-
 % ----- portefeuille -----
 decrire(portefeuille) :-
         position(portefeuille,chambre),
-        write("votre portefeuille portable est sur votre table de nuit ('portefeuille')").
+        write("votre portefeuille est sur votre table de nuit ('portefeuille')").
 decrire(portefeuille) :-
         position(portefeuille,sac),
         write("votre portefeuille ('portefeuille')").
@@ -288,6 +291,16 @@ decrire(douche) :-
 
 decrire(petit_dejeuner) :-
         write("Vous pouvez prendre votre petit déjeuner ('petit_dejeuner')*."),nl.
+
+decrire(cookie) :-
+        write("Vous pouvez commander un cookie ('cookie')*."),nl.
+
+decrire(muffin) :-
+        write("Vous pouvez commander un muffin ('muffin')*."),nl.
+
+decrire(formule_dej) :-
+        write("Vous pouvez commander la formule petit_dejeuner"),nl.
+
 % ############### descritpions des lieux ###############
 
 % ----- chambre -----
@@ -363,7 +376,11 @@ decrire(fac) :-
 
 % ----- helice -----
 decrire(helice) :-
-        write("[[ HELICE ]]").
+        action(douche,non),
+        write("[[ HELICE ]]"),nl,
+        write("Un peu de monde attend et c'est enfin à votre tour"),nl,
+        write("'Que désirez vous ?' La vendeuse vous regarde en attendant votre choix").
+
 
 % ----- crous -----
 decrire(crous) :-
