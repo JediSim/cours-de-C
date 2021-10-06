@@ -112,7 +112,7 @@ commander(X) :-
     position(portefeuille,sac),
     faire(X).
 
-commander(X) :-
+commander(_) :-
     not(position(portefeuille,sac)),
     write("Vous n'avez pas de portefeuille pour commander."),nl.
 
