@@ -37,6 +37,9 @@ position(bouteille,chambre).
 position(douche,salle_de_bain).
 position(petit_dejeuner,salon).
 position(jeanette,salle_de_cours).
+position(cookie,helice).
+position(muffin,helice).
+position(formule_dej,helice).
 
 %action
 action(douche,non).
@@ -104,7 +107,14 @@ faire(X) :-
         write("Vous ne pouvez pas faire ça."), nl,
         !.
 
+%commander
+commander(X) :-
+    position(portefeuille,sac),
+    faire(X).
 
+commander(X) :-
+    not(position(portefeuille,sac)),
+    write("Vous n'avez pas de portefeuille pour commander."),nl.
 
 % ramasser un objet
 prendre(X) :-
@@ -222,6 +232,7 @@ instructions :-
         write("aller(direction)         -- pour aller dans cette direction."), nl,
         write("faire(action).           -- pour faire une action. Une action possible est indiquée par une *"), nl,
         write("prendre(objet).          -- pour prendre un objet."), nl,
+        write("commander(objet).        -- pour commander un objet Les commandes sont indiquée par un +."), nl,
         write("lacher(objet).           -- pour lacher un objet en votre possession."), nl,
         write("sac.                     -- pour regarder dans votre sac."), nl,
         write("regarder.                -- pour regarder autour de vous."), nl,
@@ -297,13 +308,16 @@ decrire(petit_dejeuner) :-
         write("Vous pouvez prendre votre petit déjeuner ('petit_dejeuner')*."),nl.
 
 decrire(cookie) :-
-        write("Vous pouvez commander un cookie ('cookie')*."),nl.
+        position(portefeuille,sac),
+        write("Vous pouvez commander un cookie ('cookie')+."),nl.
 
 decrire(muffin) :-
-        write("Vous pouvez commander un muffin ('muffin')*."),nl.
+        position(portefeuille,sac),
+        write("Vous pouvez commander un muffin ('muffin')+."),nl.
 
 decrire(formule_dej) :-
-        write("Vous pouvez commander la formule petit_dejeuner"),nl.
+        position(portefeuille,sac),
+        write("Vous pouvez commander la formule petit déjeuner('formule_dej')+."),nl.
 
 decrire(jeanette) :-
         write("Jeanette est assise dans la salle vous pouvez aller lui parler"),nl.
@@ -384,9 +398,38 @@ decrire(fac) :-
 % ----- helice -----
 decrire(helice) :-
         action(douche,non),
+        position(portefeuille,sac),
+        action(muffin,non),
+        action(cookie,non),
+        action(formule_dej,non),
         write("[[ HELICE ]]"),nl,
         write("Un peu de monde attend et c'est enfin à votre tour"),nl,
-        write("'Que désirez vous ?' La vendeuse vous regarde en attendant votre choix").
+        write("'Que désirez vous ?' La vendeuse vous regarde en attendant votre choix"),nl,
+        write("derrière vous se trouve la sortie."),nl,
+        !.
+
+decrire(helice) :-
+        action(douche,non),
+        position_courante(P),
+        position(A,P),
+        action(A,oui),
+        write("[[ HELICE ]]"),nl,
+        write("Vous avez déjà acheté de quoi mangé ce matin."),nl,
+        write("derrière vous se trouve la sortie."),nl,
+        !.
+decrire(helice) :-
+        not(position(portefeuille,sac)),
+        write("[[ HELICE ]]"),nl,
+        write("Vous avez oublié votre portefeuille vous ne pouvez donc pas commander quoi que ce soit."),nl,
+        write("derrière vous se trouve la sortie."),nl,
+        !.
+
+decrire(helice) :-
+        action(douche,oui),
+        write("[[ HELICE ]]"),nl,
+        write("Vous êtes en retard et il y a trop de monde pour avoir le temps de commander quoi que ce soit."),nl,
+        write("derrière vous se trouve la sortie."),nl,
+        !.
 
 
 % ----- crous -----
