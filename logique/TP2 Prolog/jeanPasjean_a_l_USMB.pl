@@ -36,6 +36,7 @@ position(portefeuille,chambre).
 position(bouteille,chambre).
 position(douche,salle_de_bain).
 position(petit_dejeuner,salon).
+position(jeanette,salle_de_cours).
 
 %action
 action(douche,non).
@@ -43,6 +44,7 @@ action(petit_dejeuner,non).
 action(cookie,non).
 action(muffin,non).
 action(formule_dej,non).
+action(jeanette,non).
 
 
 %passages
@@ -61,7 +63,6 @@ passage(fac,nord,crous).
 passage(fac,ouest,salle_de_cours).
 passage(fac,est,eve). % mettre la carte etudiant à jour.
 passage(fac,sud,helice).
-
 
 %afficher le sac
 
@@ -99,13 +100,16 @@ faire(X) :-
         !.
 
 faire(X) :-
+        atom(X),
         write("Vous ne pouvez pas faire ça."), nl,
         !.
+
+
 
 % ramasser un objet
 prendre(X) :-
         atom(X),
-        position(X, en_main),
+        position(X, sac),
         write("Vous l'avez déjà !"), nl,
         !.
 
@@ -157,8 +161,7 @@ lacher(_) :-
 z :- aller(nord).
 s :- aller(sud).
 d :- aller(est).
-q :- aller(ouest).
-
+q :- aller(ouest). 
 
 % déplacements
 
@@ -198,6 +201,7 @@ lister_objets(Place) :-
         fail.
 
 lister_objets(_).
+
 
 % fin de partie
 fin :-
@@ -300,6 +304,9 @@ decrire(muffin) :-
 
 decrire(formule_dej) :-
         write("Vous pouvez commander la formule petit_dejeuner"),nl.
+
+decrire(jeanette) :-
+        write("Jeanette est assise dans la salle vous pouvez aller lui parler"),nl.
 
 % ############### descritpions des lieux ###############
 
