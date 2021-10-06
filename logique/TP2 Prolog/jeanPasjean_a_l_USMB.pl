@@ -15,7 +15,7 @@
 
 
 % position du joueur. Ce prédicat sera modifié au fur et à mesure de la partie (avec `retract` et `assert`)
-position_courante(chambre).
+position_courante(fac).
 
 %nombre d'objet dans l'inventaire, MAX 3
 inventaire(0).
@@ -36,7 +36,7 @@ position(portefeuille,chambre).
 position(bouteille,chambre).
 position(douche,salle_de_bain).
 position(petit_dejeuner,salon).
-position(jeanette,salle_de_cours).
+position(janette_parler,janette).
 position(cookie,helice).
 position(muffin,helice).
 position(formule_dej,helice).
@@ -47,7 +47,7 @@ action(petit_dejeuner,non).
 action(cookie,non).
 action(muffin,non).
 action(formule_dej,non).
-action(jeanette,non).
+action(janette_parler,non).
 
 
 %passages
@@ -66,6 +66,11 @@ passage(fac,nord,crous).
 passage(fac,ouest,salle_de_cours).
 passage(fac,est,eve). % mettre la carte etudiant à jour.
 passage(fac,sud,helice).
+%salle de cours
+passage(salle_de_cours,nord,janette).
+passage(salle_de_cours,est,fac).
+%janette
+passage(janette,sud,salle_de_cours).
 
 %afficher le sac
 
@@ -115,6 +120,10 @@ commander(X) :-
 commander(_) :-
     not(position(portefeuille,sac)),
     write("Vous n'avez pas de portefeuille pour commander."),nl.
+
+% parler
+parler(X) :-
+        action(X,non).
 
 % ramasser un objet
 prendre(X) :-
@@ -319,8 +328,6 @@ decrire(formule_dej) :-
         position(portefeuille,sac),
         write("Vous pouvez commander la formule petit déjeuner('formule_dej')+."),nl.
 
-decrire(jeanette) :-
-        write("Jeanette est assise dans la salle vous pouvez aller lui parler"),nl.
 
 % ############### descritpions des lieux ###############
 
@@ -438,8 +445,21 @@ decrire(crous) :-
 
 % ----- salle de cours -----
 decrire(salle_de_cours) :-
-        write("[[ 4A 62 ]]").
+        action(janette_parler,non),
+        write("[[ 4A 62 ]]"),nl,
+        write("Jeannette est en face de vous. Vous pouvez aller la voir'"),nl,
+        !.
+
+decrire(salle_de_cours) :-
+        action(janette_parler,oui),
+        write("[[ 4A 62 ]]"),nl,
+        !.
 
 % ----- EVE -----
 decrire(eve) :-
         write("[[ EVE ]]").
+
+%janette
+decrire(janette) :-
+        write("vous etes devant janette. C'est le moment de lui parler"),nl,
+        !.
