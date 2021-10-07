@@ -2,7 +2,7 @@
 %train 6h48
 
 %prédicats dynamiques
-:- dynamic position/2, action/2, position_courante/1, inventaire/1, passage/3, postion_dialogue/1.
+:- dynamic position/2, action/2, position_courante/1, inventaire/1, passage/3, position_dialogue/1.
 
 % on remet à jours les positions des objets et du joueur. On met a jour les actions et l'inventaire
 :- retractall(position(_, _)), retractall(position_courante(_)), retractall(inventaire(_)), retractall(action(_,_)), retractall(position_dialogue(_)).
@@ -15,6 +15,9 @@
 
 
 % position du joueur. Ce prédicat sera modifié au fur et à mesure de la partie (avec `retract` et `assert`)
+%   /|\                                                   /|\
+%  / | \ remettre la position de départ après les tests. / | \
+% /  !  \                                               /  !  \
 position_courante(fac).
 
 position_dialogue(null).
@@ -125,8 +128,14 @@ commander(_) :-
     not(position(portefeuille,sac)),
     write("Vous n'avez pas de portefeuille pour commander."),nl.
 
-% parler 
+% alias parler
+a :- choisir(a).
+b :- choisir(b).
+
+% parler
+% X est le non du dialogue. il doit correspondre à l'action correspondant ex : parler(janette) -> action(janette,non)
 parler(X) :-
+        action(X,non),
         position_courante(ICI),
         position(X, ICI),
         retract(position_courante(ICI)),
@@ -134,15 +143,22 @@ parler(X) :-
         position_dialogue(DIA),
         retract(position_dialogue(DIA)),
         assert(position_dialogue(X)),
-        dialogue(X). 
+        dialogue(X),
+        !. 
+
+parler(_) :-
+        write("Vous ne pouvez pas parler à cette personne"),
+        fail.
 
 % choisir une reponse dans dialogue
+
 choisir(Choix) :-
         position_dialogue(Ici),
         choix(Ici, Choix, La),
         retract(position_dialogue(Ici)),
         assert(position_dialogue(La)),
-        dialogue(La).
+        dialogue(La),
+        !.
 
 choisir(_) :-
         write("Ce choix n'existe pas !"),nl,
@@ -496,43 +512,42 @@ dialogue(janette) :-
 
 dialogue(janette_dialogue1a) :-
         \+ position(stylo,sac),
-        write("Janette : Oh non !!! Tu ne devais pas etre reveillé tu as oublié ton stylo."),nl,
-        position_courante(ICI),
-        retract(position_courante(ICI)),
-        assert(position_courante(salle_de_cours)),
-        postion_dialogue(DIA),
-        retract(position_dialogue(DIA)),
-        assert(position_dialogue(null)),
-        regarder,
+        % mettre deux retour à la ligne pour le dernier dialogue
+        write("Janette : Oh non !!! Tu ne devais pas etre reveillé tu as oublié ton stylo."),nl,nl,
+        retract(action(janette, non)),
+        assert(action(janette, oui)),
+        dialogue_fin(salle_de_cours),
         !.
 
 dialogue(janette_dialogue1a) :-
         position(stylo,sac),
-        write("Janette : Oh !!! Merci beaucoup tu es mon sauveur <3 <3 !!!"),nl,
+        % mettre deux retour à la ligne pour le dernier dialogue
+        write("Janette : Oh !!! Merci beaucoup tu es mon sauveur <3 <3 !!!"),nl,nl,
         retract(action(janette, non)),
         assert(action(janette, oui)),
         retract(position(stylo,sac)),
         retract(inventaire(I)),
         decr(I,Y),
         assert(inventaire(Y)),
-        position_courante(ICI),
-        retract(position_courante(ICI)),
-        assert(position_courante(salle_de_cours)),
-        postion_dialogue(DIA),
-        retract(position_dialogue(DIA)),
-        assert(position_dialogue(null)),
-        regarder,
+        dialogue_fin(salle_de_cours),
         !.
 
 dialogue(janette_dialogue1b) :-
-        write("Janette : C'est pas grave. Je n'avais qu'à y penser."),nl,
+        % mettre deux retour à la ligne pour le dernier dialogue
+        write("Janette : C'est pas grave. Je n'avais qu'à y penser."),nl,nl,
         retract(action(janette,non)),
         assert(action(janette,oui)),
-        postion_dialogue(DIA),
+        dialogue_fin(salle_de_cours),
+        !.
+
+% Sortie du labyrinthe de dialogue et retour dan celui de salle
+dialogue_fin(Salle_de_retour) :-
+        write("Le dialogue est fini."),nl,nl,
+        position_dialogue(DIA),
         retract(position_dialogue(DIA)),
         assert(position_dialogue(null)),
         position_courante(ICI),
         retract(position_courante(ICI)),
-        assert(position_courante(salle_de_cours)),
-        
-        regarder.
+        assert(position_courante(Salle_de_retour)),
+        regarder,
+        !.
