@@ -2,7 +2,7 @@
 %train 6h48
 
 %prédicats dynamiques
-:- dynamic position/2, action/2, position_courante/1, inventaire/1, passage/3, position_dialogue/1.
+:- dynamic position/2, action/2, position_courante/1, inventaire/1, passage/3, position_dialogue/1, score/1.
 
 % on remet à jours les positions des objets et du joueur. On met a jour les actions et l'inventaire
 :- retractall(position(_, _)), retractall(position_courante(_)), retractall(inventaire(_)), retractall(action(_,_)), retractall(position_dialogue(_)).
@@ -22,6 +22,9 @@ position_courante(fac).
 
 position_dialogue(null).
 
+% init score
+score(0).
+
 %nombre d'objet dans l'inventaire, MAX 3
 inventaire(0).
 %objets
@@ -33,7 +36,7 @@ objet(bouteille).
 objet(portefeuille).
 
 % position des objets et des actions
-position(stylo, chambre).
+position(stylo, sac).
 position(papier_CROUS,chambre).
 position(pc,chambre).
 position(bloc_note,chambre).
@@ -95,6 +98,12 @@ incr(X, X1) :-
 decr(Y, Y1) :-
     Y1 is Y-1.
 
+add(X, X1, NB) :-
+        X1 is X+NB.
+
+sous(Y, Y1, NB) :-
+        Y1 is Y+NB.
+
 % faire une action
 faire(X) :-
         atom(X),
@@ -128,9 +137,6 @@ commander(_) :-
     not(position(portefeuille,sac)),
     write("Vous n'avez pas de portefeuille pour commander."),nl.
 
-% alias parler
-a :- choisir(a).
-b :- choisir(b).
 
 % parler
 % X est le non du dialogue. il doit correspondre à l'action correspondant ex : parler(janette) -> action(janette,non)
@@ -151,6 +157,10 @@ parler(_) :-
         fail.
 
 % choisir une reponse dans dialogue
+
+% alias choisir
+a :- choisir(a).
+b :- choisir(b).
 
 choisir(Choix) :-
         position_dialogue(Ici),
@@ -249,6 +259,7 @@ lister_actions(Place) :-
         position(X, Place),
         decrire(X), nl,
         fail.
+
 lister_actions(_).
 
 % afficher la liste des objets à l'emplacement donné
@@ -264,6 +275,9 @@ lister_objets(_).
 % fin de partie
 fin :-
         nl, write("La partie est finie."), nl,
+        write("score : "),
+        score(Score),
+        write(Score),nl,
         halt.
 
 %defaite
@@ -529,6 +543,9 @@ dialogue(janette_dialogue1a) :-
         retract(inventaire(I)),
         decr(I,Y),
         assert(inventaire(Y)),
+        retract(score(Scr)),
+        add(Scr,Nscr,150),
+        assert(score(Nscr)),
         dialogue_fin(salle_de_cours),
         !.
 
