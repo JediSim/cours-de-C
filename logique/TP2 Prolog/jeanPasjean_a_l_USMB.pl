@@ -30,7 +30,7 @@ objet(bouteille).
 objet(portefeuille).
 
 % position des objets et des actions
-position(stylo, sac).
+position(stylo, chambre).
 position(papier_CROUS,chambre).
 position(pc,chambre).
 position(bloc_note,chambre).
@@ -142,8 +142,7 @@ choisir(Choix) :-
         choix(Ici, Choix, La),
         retract(position_dialogue(Ici)),
         assert(position_dialogue(La)),
-        dialogue(La),
-        !.
+        dialogue(La).
 
 choisir(_) :-
         write("Ce choix n'existe pas !"),nl,
@@ -496,6 +495,18 @@ dialogue(janette) :-
         !.
 
 dialogue(janette_dialogue1a) :-
+        \+ position(stylo,sac),
+        write("Janette : Oh non !!! Tu ne devais pas etre reveillé tu as oublié ton stylo."),nl,
+        position_courante(ICI),
+        retract(position_courante(ICI)),
+        assert(position_courante(salle_de_cours)),
+        postion_dialogue(DIA),
+        retract(position_dialogue(DIA)),
+        assert(position_dialogue(null)),
+        regarder,
+        !.
+
+dialogue(janette_dialogue1a) :-
         position(stylo,sac),
         write("Janette : Oh !!! Merci beaucoup tu es mon sauveur <3 <3 !!!"),nl,
         retract(action(janette, non)),
@@ -513,8 +524,15 @@ dialogue(janette_dialogue1a) :-
         regarder,
         !.
 
-dialogue(janette_dialogue1a) :-
-        write("Janette : Oh non !!! Tu ne devais pas etre reveillé tu as oublié ton stylo."),nl.
-
-dialogue(_) :-
-        write("erreur"),nl.
+dialogue(janette_dialogue1b) :-
+        write("Janette : C'est pas grave. Je n'avais qu'à y penser."),nl,
+        retract(action(janette,non)),
+        assert(action(janette,oui)),
+        postion_dialogue(DIA),
+        retract(position_dialogue(DIA)),
+        assert(position_dialogue(null)),
+        position_courante(ICI),
+        retract(position_courante(ICI)),
+        assert(position_courante(salle_de_cours)),
+        
+        regarder.
