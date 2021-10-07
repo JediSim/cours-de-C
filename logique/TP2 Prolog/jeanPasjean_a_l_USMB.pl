@@ -2,10 +2,10 @@
 %train 6h48
 
 %prédicats dynamiques
-:- dynamic position/2, action/2, position_courante/1, inventaire/1, passage/3.
+:- dynamic position/2, action/2, position_courante/1, inventaire/1, passage/3, postion_dialogue/1.
 
 % on remet à jours les positions des objets et du joueur. On met a jour les actions et l'inventaire
-:- retractall(position(_, _)), retractall(position_courante(_)), retractall(inventaire(_)), retractall(action(_,_)).
+:- retractall(position(_, _)), retractall(position_courante(_)), retractall(inventaire(_)), retractall(action(_,_)), retractall(position_dialogue(_)).
 
 % on déclare des opérateurs, pour autoriser `prendre torche` au lieu de `prendre(torche)`
 :- op(1000, fx, prendre).
@@ -16,6 +16,8 @@
 
 % position du joueur. Ce prédicat sera modifié au fur et à mesure de la partie (avec `retract` et `assert`)
 position_courante(fac).
+
+position_dialogue(null).
 
 %nombre d'objet dans l'inventaire, MAX 3
 inventaire(0).
@@ -28,7 +30,7 @@ objet(bouteille).
 objet(portefeuille).
 
 % position des objets et des actions
-position(stylo, chambre).
+position(stylo, sac).
 position(papier_CROUS,chambre).
 position(pc,chambre).
 position(bloc_note,chambre).
@@ -40,6 +42,7 @@ position(janette_parler,janette).
 position(cookie,helice).
 position(muffin,helice).
 position(formule_dej,helice).
+position(janette,salle_de_cours).
 
 %action
 action(douche,non).
@@ -47,7 +50,7 @@ action(petit_dejeuner,non).
 action(cookie,non).
 action(muffin,non).
 action(formule_dej,non).
-action(janette_parler,non).
+action(janette,non).
 
 
 %passages
@@ -67,10 +70,11 @@ passage(fac,ouest,salle_de_cours).
 passage(fac,est,eve). % mettre la carte etudiant à jour.
 passage(fac,sud,helice).
 %salle de cours
-passage(salle_de_cours,nord,janette).
 passage(salle_de_cours,est,fac).
-%janette
-passage(janette,sud,salle_de_cours).
+
+%choix dialogue
+choix(janette,a,janette_dialogue1a).
+choix(janette,b,janette_dialogue1b).
 
 %afficher le sac
 
@@ -121,9 +125,29 @@ commander(_) :-
     not(position(portefeuille,sac)),
     write("Vous n'avez pas de portefeuille pour commander."),nl.
 
-% parler
+% parler 
 parler(X) :-
-        action(X,non).
+        position_courante(ICI),
+        position(X, ICI),
+        retract(position_courante(ICI)),
+        assert(position_courante(salle_dialogue)),
+        position_dialogue(DIA),
+        retract(position_dialogue(DIA)),
+        assert(position_dialogue(X)),
+        dialogue(X). 
+
+% choisir une reponse dans dialogue
+choisir(Choix) :-
+        position_dialogue(Ici),
+        choix(Ici, Choix, La),
+        retract(position_dialogue(Ici)),
+        assert(position_dialogue(La)),
+        dialogue(La),
+        !.
+
+choisir(_) :-
+        write("Ce choix n'existe pas !"),nl,
+        fail.
 
 % ramasser un objet
 prendre(X) :-
@@ -445,13 +469,13 @@ decrire(crous) :-
 
 % ----- salle de cours -----
 decrire(salle_de_cours) :-
-        action(janette_parler,non),
+        action(janette,non),
         write("[[ 4A 62 ]]"),nl,
-        write("Jeannette est en face de vous. Vous pouvez aller la voir'"),nl,
+        write("Jeannette est en face de vous. Vous pouvez aller lui parler (parler(janette))"),nl,
         !.
 
 decrire(salle_de_cours) :-
-        action(janette_parler,oui),
+        action(janette,oui),
         write("[[ 4A 62 ]]"),nl,
         !.
 
@@ -459,7 +483,38 @@ decrire(salle_de_cours) :-
 decrire(eve) :-
         write("[[ EVE ]]").
 
-%janette
-decrire(janette) :-
-        write("vous etes devant janette. C'est le moment de lui parler"),nl,
+% ######################## dialogue ###################
+
+%janette_dialogue1
+dialogue(janette) :-
+        write("Jean : Bonjour janette ! Comment tu vas ?"),nl,
+        write("Janette : Je n'est pas de stylo et je ne pourrais pas suivre le cours sans."),nl,
+        nl,
+        nl,
+        write("a - je peux te donner le mien si tu veux"),nl,
+        write("b - Je n'ai pas de stylo, je suis desolé."),nl,
         !.
+
+dialogue(janette_dialogue1a) :-
+        position(stylo,sac),
+        write("Janette : Oh !!! Merci beaucoup tu es mon sauveur <3 <3 !!!"),nl,
+        retract(action(janette, non)),
+        assert(action(janette, oui)),
+        retract(position(stylo,sac)),
+        retract(inventaire(I)),
+        decr(I,Y),
+        assert(inventaire(Y)),
+        position_courante(ICI),
+        retract(position_courante(ICI)),
+        assert(position_courante(salle_de_cours)),
+        postion_dialogue(DIA),
+        retract(position_dialogue(DIA)),
+        assert(position_dialogue(null)),
+        regarder,
+        !.
+
+dialogue(janette_dialogue1a) :-
+        write("Janette : Oh non !!! Tu ne devais pas etre reveillé tu as oublié ton stylo."),nl.
+
+dialogue(_) :-
+        write("erreur"),nl.
