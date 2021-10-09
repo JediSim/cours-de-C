@@ -285,11 +285,21 @@ lister_objets(Place) :-
 
 lister_objets(_).
 
+calc_score :-
+    action(petit_dejeuner,oui) -> retract(score(Scr)), add(Scr,Nscr,50), assert(score(Nscr));
+    action(douche,oui) -> retract(score(Scr)), sous(Scr,Nscr,100), assert(score(Nscr));
+    position(numero_janette,sac) -> retract(score(Scr)), add(Scr,Nscr,100), assert(score(Nscr));
+    !.
+
+
 
 % fin de partie
 fin :-
-        nl, write("La partie est finie."), nl,
+        write("## { Lundi matin 5h50 } ##"), nl,
+        write("Vous venez de vous réveiller dans votre chambre, vous regardez le reveil qui affiche -5:50-"), nl,
+        write("Vous vous rappelez vaguement d'un rêve..."), nl,
         write("score : "),
+        calc_score,
         score(Score),
         write(Score),nl,
         halt.
@@ -310,6 +320,7 @@ instructions :-
         write("prendre(objet).          -- pour prendre un objet."), nl,
         write("commander(objet).        -- pour commander un objet Les commandes sont indiquée par un +."), nl,
         write("lacher(objet).           -- pour lacher un objet en votre possession."), nl,
+        write("parler(personne).        -- pour parler à une personne les personnes avec qui vous pouvez parlez sont indiquée par un ~ devant le nom."), nl,
         write("sac.                     -- pour regarder dans votre sac."), nl,
         write("regarder.                -- pour regarder autour de vous."), nl,
         write("instructions.            -- pour revoir ce message !."), nl,
@@ -591,7 +602,7 @@ decrire(crous_salle_de_pause) :-
 decrire(salle_de_cours) :-
         action(janette,non),
         write("[[ 4A 62 ]]"),nl,
-        write("Jeannette est en face de vous. Vous pouvez aller lui parler (parler(janette))"),nl,
+        write("~Jeannette est en face de vous. Vous pouvez aller lui parler ('janette')"),nl,
         !.
 
 decrire(salle_de_cours) :-
