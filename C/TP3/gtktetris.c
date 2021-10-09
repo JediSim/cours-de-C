@@ -90,6 +90,28 @@ void dessineGrille( cairo_t* cr, Grille g )
   }
 }
 
+void nouvellePiece( Jeu* j )
+{
+  j->piece = pieceAleatoire( j->tab );
+  j->col = ( LARGEUR - j->piece.largeur ) / 2;
+}
+
+void dessinePiece( cairo_t* cr, Jeu* j )
+{
+  int col = j->col + MARGE_LARGEUR/2;
+  Piece p = j->piece;
+
+  for (int h = 0; h < p.hauteur; h++) {
+    for (int l = 0; l < p.largeur; l++) {
+      // dessineCarre assume que l'on écris des pièces dans la grille
+      // On a donc repris la formule de la hauteur : HAUTEUR-1-ligne+MARGE_HAUTE
+      // Ajouter HAUTEUR permet de se retrouver avec -1-ligne+MARGE_HAUTE.
+      // Le reste de la formule de la hauteur permet de placer la pièce correctement
+      dessineCarre( cr, HAUTEUR + (p.hauteur-1) - h , col + l, p.forme[h][l]);
+    }
+  }
+}
+
 gboolean realize_evt_reaction( GtkWidget *widget, gpointer data )
 { // force un événement "draw" juste derrière.
   gtk_widget_queue_draw( widget );
@@ -126,6 +148,9 @@ gboolean on_draw( GtkWidget *widget, GdkEventExpose *event, gpointer data )
 
   // CreerGrille
   dessineGrille( cr, j->g );
+
+  // piece courante
+  dessinePiece( cr, j );
 
   // (B) On a fini, on peut détruire la structure.
   gdk_window_end_draw_frame(window,drawingContext);
@@ -258,6 +283,9 @@ int main(int argc, char *argv[]) {
   /* Passe les arguments à GTK, pour qu'il extrait ceux qui le concernent. */
   gtk_init(&argc, &argv);
 
+  // Pour des pièces aléatoires
+  srand(time(NULL));
+
   Jeu j;
 
   initialiseGrille( j.g );
@@ -265,8 +293,11 @@ int main(int argc, char *argv[]) {
   j.score = 0;
   j.delay = 1;
 
-  j.piece = j.tab[3];
-  ecrirePiece(j.g, j.piece, hauteurExacte(j.g, 1, &j.piece), 1);
+  // TEST ZONE
+  Piece p = j.tab[3];
+  ecrirePiece(j.g, p, hauteurExacte(j.g, 1, &p), 1);
+  nouvellePiece( &j );
+  // END TEST ZONE
 
   creerIHM( &j );
 
