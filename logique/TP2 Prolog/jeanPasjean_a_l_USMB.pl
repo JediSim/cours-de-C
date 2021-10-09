@@ -18,7 +18,7 @@
 %   /|\                                                   /|\
 %  / | \ remettre la position de départ après les tests. / | \
 % /  !  \                                               /  !  \
-position_courante(fac).
+position_courante(chambre).
 
 position_dialogue(null).
 
@@ -36,7 +36,7 @@ objet(bouteille).
 objet(portefeuille).
 
 % position des objets et des actions
-position(stylo, sac).
+position(stylo, chambre).
 position(papier_CROUS,chambre).
 position(pc,chambre).
 position(bloc_note,chambre).
@@ -57,7 +57,7 @@ action(cookie,non).
 action(muffin,non).
 action(formule_dej,non).
 action(janette,non).
-
+action(personne_acceuil_trouve,non).
 
 %passages
 %chambre
@@ -77,6 +77,20 @@ passage(fac,est,eve). % mettre la carte etudiant à jour.
 passage(fac,sud,helice).
 %salle de cours
 passage(salle_de_cours,est,fac).
+%crous
+passage(crous,nord,crous_etage).
+passage(crous,sud,fac).
+passage(crous,ouest,crous_bureau).
+passage(crous,est,crous_salle_de_pause).
+
+passage(crous_bureau,nord,crous_ordi).
+passage(crous_ordi,sud,crous_bureau).
+
+passage(crous_bureau,sud,crous).
+passage(crous_etage,sud,crous).
+passage(crous_salle_de_pause,sud,crous).
+
+
 
 %choix dialogue
 choix(janette,a,janette_dialogue1a).
@@ -494,7 +508,84 @@ decrire(helice) :-
 
 % ----- crous -----
 decrire(crous) :-
-        write("[[ CROUS ]]").
+        action(personne_acceuil_trouve,non),
+        position(papier_CROUS,sac),
+        write("[[ CROUS ]]"),nl,
+        write("L'acceuil est vide...Essayez de retrouver la responsable pour lui donner les papiers."),nl,
+        write("Devant vous se trouve la porte donnant sur l'étage"),nl,
+        write("A votre gauche un bureau, et à votre droite une salle de pause"),nl,
+        !.
+decrire(crous) :-
+        action(personne_acceuil_trouve,non),
+        position(papier_CROUS,_),
+        write("[[ CROUS ]]"),nl,
+        write("L'acceuil est vide...De toute façon vous n'avez pas les papier."),nl,
+        write("Devant vous se trouve la porte donnant sur l'étage"),nl,
+        write("A votre gauche un bureau, et à votre droite une salle de pause"),nl,
+        !.
+
+decrire(crous) :-
+        action(personne_acceuil_trouve,oui),
+        position(papier_CROUS,sac),
+        retract(position(papier_CROUS,sac)),
+        assert(position(papier_CROUS,personne_crous)),
+        retract(score(Scr)),
+        add(Scr,Nscr,150),
+        assert(score(Nscr)),
+        write("[[ CROUS ]]"),nl,
+        write("La personne de l'acceuil vous attend, vous lui donnez vos papiers."),nl,
+        write("Vous pouvez sortir du crous. (la porte se trouve derrière vous)"),nl,
+        write("A votre gauche un bureau, et à votre droite une salle de pause"),nl,
+        !.
+decrire(crous) :-
+        action(personne_acceuil_trouve,oui),
+        position(papier_CROUS,personne_crous),
+        write("[[ CROUS ]]"),nl,
+        write("La personne de l'acceuil est là, vous lui avez déjà donné vos papiers."),nl,
+        write("Vous pouvez sortir du crous. (la porte se trouve derrière vous)"),nl,
+        write("A votre gauche un bureau, en face des escaliers et à votre droite une salle de pause"),nl,
+        !.
+decrire(crous) :-
+        action(personne_acceuil_trouve,oui),
+        position(papier_CROUS,_),
+        write("[[ CROUS ]]"),nl,
+        write("La personne de l'acceuil vous attend, mais vous n'avez pas vos papiers."),nl,
+        write("Vous pouvez sortir du crous. (la porte se trouve derrière vous)"),nl,
+        write("A votre gauche un bureau, en face des escaliers et à votre droite une salle de pause"),nl,
+        !.
+
+decrire(crous_etage) :-
+        write("[[ CROUS - ETAGE ]]"),nl,
+        write("L'étage semble vide...Vous avez perdu votre temps a monter"),nl,
+        write("Derrière vous se trouve l'escalier pour redescendre"),nl,
+        !.
+decrire(crous_bureau) :-
+        write("[[ CROUS - BUREAU ]]"),nl,
+        write("Le bureau est vide... l'ordinateur devant vous est encore allumé..."),nl,
+        write("Derrière vous se trouve la porte."),nl,
+        !.
+
+decrire(crous_ordi) :-
+        write("[[ CROUS - BUREAU - ORDINATEUR ]]"),nl,
+        write("Le navigateur est ouvert sur krunker.io"),nl,
+        write("vous pouvez vous éloigner de l'ordinateur."),nl,
+        !.
+
+decrire(crous_salle_de_pause) :-
+        position(papier_CROUS,personne_crous),
+        write("[[ CROUS - SALLE DE PAUSE ]]"),nl,
+        write("la salle de pause est vide..."),nl,
+        write("derrière vous se trouve la sortie"),nl,
+        !.
+
+decrire(crous_salle_de_pause) :-
+        write("[[ CROUS - SALLE DE PAUSE ]]"),nl,
+        retract(action(personne_acceuil_trouve,_)),
+        assert(action(personne_acceuil_trouve,oui)),
+        write("Une personne se tient devant la machine à café ! vous avez trouvé la personne de l'acceuil !"),nl,
+        write("'Je fini mon café et je vous rejoins, attendez moi à l'acceuil' - Personne de l'acceuil."),nl,
+        write("derrière vous se trouve la sortie"),nl,
+        !.
 
 % ----- salle de cours -----
 decrire(salle_de_cours) :-
@@ -557,7 +648,7 @@ dialogue(janette_dialogue1b) :-
         dialogue_fin(salle_de_cours),
         !.
 
-% Sortie du labyrinthe de dialogue et retour dan celui de salle
+% Sortie du labyrinthe de dialogue et retour dans celui de salle
 dialogue_fin(Salle_de_retour) :-
         write("Le dialogue est fini."),nl,nl,
         position_dialogue(DIA),
