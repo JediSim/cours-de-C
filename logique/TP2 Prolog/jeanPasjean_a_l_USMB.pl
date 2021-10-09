@@ -37,7 +37,7 @@ objet(portefeuille).
 objet(numero_janette).
 
 % position des objets et des actions
-position(stylo, chambre).
+position(stylo, sac).
 position(papier_CROUS,chambre).
 position(pc,chambre).
 position(bloc_note,chambre).
@@ -60,6 +60,7 @@ action(muffin,non).
 action(formule_dej,non).
 action(janette,non).
 action(janette_reussi,non).
+action(prof_nul,non).
 action(personne_acceuil_trouve,non).
 
 %passages
@@ -96,8 +97,10 @@ passage(crous_salle_de_pause,sud,crous).
 
 
 %choix dialogue
-choix(janette,a,janette_dialogue1a).
-choix(janette,b,janette_dialogue1b).
+choix(janette,a,c_est_facile).
+choix(janette,b,le_prof_est_nul).
+choix(c_est_facile,a,janette_dialogue1a).
+choix(c_est_facile,b,janette_dialogue1b).
 
 %afficher le sac
 
@@ -291,6 +294,7 @@ lister_objets(_).
 calc_score :-
     action(petit_dejeuner,oui) -> retract(score(Scr)), add(Scr,Nscr,50), assert(score(Nscr));
     action(douche,oui) -> retract(score(Scr)), sous(Scr,Nscr,100), assert(score(Nscr));
+    action(prof_nul,oui) -> retract(score(Scr)), sous(Scr,Nscr,-100000000000000000000), assert(score(Nscr));
     position(numero_janette,sac) -> retract(score(Scr)), add(Scr,Nscr,250), assert(score(Nscr));
     !.
 
@@ -309,7 +313,12 @@ fin :-
 
 %defaite
 perdu :-
-        nl,write("--<<{{ GAME OVER }}>>--"),nl.
+        nl,write("--<<{{ GAME OVER }}>>--"),nl,
+        write("score : "),
+        calc_score,
+        score(Score),
+        write(Score),nl,
+        halt. 
 
 % affiche les instructions du jeu
 instructions :-
@@ -641,7 +650,7 @@ decrire(salle_de_cours) :-
         write("."),nl,
         write("."),nl,
         write("One hour later..."),nl,
-        write("Le cours est enfin fini !"),nl, 
+        write("Le cours est fini ."),nl, 
         write("Janette arrive avec un grand sourire et vous donne quelque chose ."),nl,
         write("Janette : C'est pour m'avoir gentillement preté ton stylo :)"),nl,
         write("Vous avez le numero de Janette, vous etes content."),nl,
@@ -654,10 +663,28 @@ decrire(eve) :-
 
 % ######################## dialogue ###################
 
-%janette_dialogue1
 dialogue(janette) :-
         write("Jean : Bonjour janette ! Comment tu vas ?"),nl,
-        write("Janette : Je n'est pas de stylo et je ne pourrais pas suivre le cours sans."),nl,
+        write("Janette : Ca va bien et toi ? Tu penses quoi du cours de logique de M. Hyvernat ?"),nl,
+        nl,
+        nl,
+        write("a - C'est super facile le prolog. En plus faire un jeu avec c'est trop drole."),nl,
+        write("b - Le prof est nul."),nl,
+        !.
+
+dialogue(le_prof_est_nul) :-
+        write("Jean : Le prof est trop nul."),nl,
+        write("Le prof arrive à ce moment là. Il a tout entendu."),nl,
+        retract(action(prof_nul,non)),
+        assert(action(prof_nul,oui)),
+        perdu,
+        !.
+
+dialogue(c_est_facile) :-
+        write("Jean : J'adore le prolog et surtout l'idée de faire un jeu avec."),nl,
+        write("Janette : Je suis bien d'accord avec toi."),nl,
+        write("Janette : Oh non je viens de me rendre compte que je n'ai pas de stylo !"),nl,
+        write("Janette : Comment je vais faire pour suivre ce super cours, snif."),nl,
         nl,
         nl,
         write("a - je peux te donner le mien si tu veux"),nl,
