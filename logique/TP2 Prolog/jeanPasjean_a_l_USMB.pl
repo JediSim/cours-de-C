@@ -18,7 +18,7 @@
 %   /|\                                                   /|\
 %  / | \ remettre la position de départ après les tests. / | \
 % /  !  \                                               /  !  \
-position_courante(chambre).
+position_courante(salle_de_cours).
 
 position_dialogue(null).
 
@@ -34,6 +34,7 @@ objet(pc).
 objet(bloc_note).
 objet(bouteille).
 objet(portefeuille).
+objet(numero_janette).
 
 % position des objets et des actions
 position(stylo, chambre).
@@ -49,6 +50,7 @@ position(cookie,helice).
 position(muffin,helice).
 position(formule_dej,helice).
 position(janette,salle_de_cours).
+position(numero_janette,salle_stock).
 
 %action
 action(douche,non).
@@ -57,6 +59,7 @@ action(cookie,non).
 action(muffin,non).
 action(formule_dej,non).
 action(janette,non).
+action(janette_reussi,non).
 action(personne_acceuil_trouve,non).
 
 %passages
@@ -288,7 +291,7 @@ lister_objets(_).
 calc_score :-
     action(petit_dejeuner,oui) -> retract(score(Scr)), add(Scr,Nscr,50), assert(score(Nscr));
     action(douche,oui) -> retract(score(Scr)), sous(Scr,Nscr,100), assert(score(Nscr));
-    position(numero_janette,sac) -> retract(score(Scr)), add(Scr,Nscr,100), assert(score(Nscr));
+    position(numero_janette,sac) -> retract(score(Scr)), add(Scr,Nscr,250), assert(score(Nscr));
     !.
 
 
@@ -387,6 +390,11 @@ decrire(bouteille) :-
         position(bouteille,sac),
         write("votre bouteille d'eau ('bouteille')").
 
+% ----- numero de Janette -----
+decrire(numero_janette) :-
+        position(numero_janette,sac),
+        write("Un petit bout de papier avec le numero de Janette. Ca vous fait sourire <3").
+
 % ############### descritpions actions ###############
 decrire(douche) :-
         write("Vous pouvez vous doucher ('douche')*."),nl.
@@ -466,6 +474,7 @@ decrire(gare) :-
 % ----- fac -----
 decrire(fac) :-
         action(petit_dejeuner,non),
+        action(janette,non),
         write("[[ USMB ]]"),nl,
         write("Vous êtes sur le campus. Au nord, se trouve la batiment du crous."),nl,
         write("à l'ouest la salle de cours, à l'est le batiment EVE"),nl,
@@ -474,11 +483,17 @@ decrire(fac) :-
         !.
 
 decrire(fac) :-
+        action(janette,oui),
+        fin,
+        !.
+
+decrire(fac) :-
         write("[[ USMB ]]"),nl,
         write("Vous êtes sur le campus. Au nord, se trouve la batiment du crous."),nl,
         write("à l'ouest la salle de cours, à l'est le batiment EVE"),nl,
         write("derrière vous se trouve l'hélice."),nl,
         !.
+
 
 % ----- helice -----
 decrire(helice) :-
@@ -602,12 +617,35 @@ decrire(crous_salle_de_pause) :-
 decrire(salle_de_cours) :-
         action(janette,non),
         write("[[ 4A 62 ]]"),nl,
-        write("~Jeannette est en face de vous. Vous pouvez aller lui parler ('janette')"),nl,
+        write("~Janette est en face de vous. Vous pouvez aller lui parler ('janette')"),nl,
         !.
 
 decrire(salle_de_cours) :-
         action(janette,oui),
+        action(janette_reussi,non),
         write("[[ 4A 62 ]]"),nl,
+        write("Le professeur vient d'arriver le cours va commencer."),nl,
+        write("."),nl,
+        write("."),nl,
+        write("."),nl,
+        write("One hour later..."),nl,
+        write("Le cours est enfin fini vous pouvez sortir (est)"),nl,
+        !.
+
+decrire(salle_de_cours) :-
+        action(janette,oui),
+        action(janette_reussi,oui),
+        write("[[ 4A 62 ]]"),nl,
+        write("Le professeur vient d'arriver le cours va commencer."),nl,
+        write("."),nl,
+        write("."),nl,
+        write("."),nl,
+        write("One hour later..."),nl,
+        write("Le cours est enfin fini !"),nl, 
+        write("Janette arrive avec un grand sourire et vous donne quelque chose ."),nl,
+        write("Janette : C'est pour m'avoir gentillement preté ton stylo :)"),nl,
+        write("Vous avez le numero de Janette, vous etes content."),nl,
+        write("Vous pouvez quitter la salle de cours (est)."),nl,
         !.
 
 % ----- EVE -----
@@ -641,13 +679,17 @@ dialogue(janette_dialogue1a) :-
         write("Janette : Oh !!! Merci beaucoup tu es mon sauveur <3 <3 !!!"),nl,nl,
         retract(action(janette, non)),
         assert(action(janette, oui)),
+        retract(action(janette_reussi,non)),
+        assert(action(janette_reussi,oui)),
         retract(position(stylo,sac)),
-        retract(inventaire(I)),
-        decr(I,Y),
-        assert(inventaire(Y)),
-        retract(score(Scr)),
-        add(Scr,Nscr,150),
-        assert(score(Nscr)),
+        % retract(inventaire(I)), % pas besoin de motifier la place de l'inventaire car un objet enlevé un autre ajouté.
+        % decr(I,Y),
+        % assert(inventaire(Y)),
+        retract(position(numero_janette,salle_stock)),
+        assert(position(numero_janette,sac)),
+        % retract(inventaire(I)),
+        % incr(I,Y),
+        % assert(inventaire(Y)),
         dialogue_fin(salle_de_cours),
         !.
 
