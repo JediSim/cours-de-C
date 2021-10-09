@@ -18,7 +18,7 @@
 %   /|\                                                   /|\
 %  / | \ remettre la position de départ après les tests. / | \
 % /  !  \                                               /  !  \
-position_courante(salle_de_cours).
+position_courante(chambre).
 
 position_dialogue(null).
 
@@ -37,7 +37,7 @@ objet(portefeuille).
 objet(numero_janette).
 
 % position des objets et des actions
-position(stylo, sac).
+position(stylo, chambre).
 position(papier_CROUS,chambre).
 position(pc,chambre).
 position(bloc_note,chambre).
