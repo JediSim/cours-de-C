@@ -24,4 +24,5 @@ Proof.
     exists (g x).       (* règle ∃c *)
     unfold comp in H.
     (* ... *)
+    assumption.
 Qed.
