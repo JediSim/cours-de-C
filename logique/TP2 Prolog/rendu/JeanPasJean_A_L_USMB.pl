@@ -96,6 +96,7 @@ passage(crous_salle_de_pause,sud,crous).
 
 %eve
 passage(eve,sud,fac).
+passage(helice,sud,fac).
 
 
 
@@ -180,6 +181,8 @@ faire(X) :-
 %commander
 commander(X) :-
     position(portefeuille,sac),
+    retract(action(petit_dejeuner, non)),
+    assert(action(petit_dejeuner, oui)),
     faire(X).
 
 commander(_) :-
