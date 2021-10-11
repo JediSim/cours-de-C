@@ -13,5 +13,9 @@ a. 1 subgoal (ID 24)
 b. Le programme plante (Error : Attempt to save an incomplete proof).
 c. En ajoutant "assumption." avant la commande "Qed" la preuve se fini.
 
-Q2 :
-Voir fichier mario-deduction_naturelle.v
+Q2 - Q8 :
+Voir fichier PICHENOT-REY-deduction_naturelle.v
+
+Q10 :
+La preuve ne fonctionne pas car on ne peut pas prouver un raisonnement recursif sans preuve recusrsive.
+

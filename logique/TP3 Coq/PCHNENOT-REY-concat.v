@@ -24,19 +24,38 @@ Compute (concat [1; 2] [65; 66; 67; 68]).
 
 Theorem concat_vide_gauche : forall l : list nat, concat [] l = l.
 Proof.
-Admitted. 
+  intro.
+  simpl.
+  trivial.
+Qed.
 
-
-Theorem concat_vide_droite : forall l, concat l [] = l.
-Proof.
-Admitted. 
-
-
+Theorem concat_vide_droite : forall l : list nat, concat l [] = l.
+Proof. 
+  intro.
+  induction l.
+  simpl.
+  trivial.
+  simpl.
+  rewrite IHl.
+  trivial.
+ Qed.
+  
 Theorem concat_associative : forall l1 l2 l3, concat (concat l1 l2) l3 = concat l1 (concat l2 l3).
 Proof.
-Admitted. 
-
-
+  intro.
+  induction l1.
+  simpl.
+  trivial.
+  simpl.
+  induction l2.
+  simpl.
+  induction l3.
+  simpl.
+  trivial.
+  trivial.
+  simpl.
+  simpl.
+  
 (* définition naïve (quadratique) de la fonction qui renvoie une liste "à l'envers" *)
 Fixpoint renverse (l : list nat) :=
   match l with
@@ -66,3 +85,4 @@ Admitted.
 Theorem thm_renverse : forall l, renverse l = renverse_concat l [].
 Proof.
 Admitted. 
+
