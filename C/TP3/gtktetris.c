@@ -8,9 +8,16 @@
 
 gboolean gauche( GtkWidget *widget, gpointer data )
 {
+  GtkWidget* window = (GtkWidget*)gtk_widget_get_window(widget);
   // Recupère la valeur passée en paramètre.
   Jeu* j = (Jeu*) data;
-  printf( "Gauche, val=%d\n", j->score ); // affichera 17
+  if (j->col > 1)
+  {
+    j->col = j->col-1;
+  }
+
+  printf( "Gauche, val=%d\n", j->col); // affichera 17
+  gtk_widget_queue_draw( window );
   return TRUE; // Tout s'est bien passé
 }
 
@@ -78,7 +85,7 @@ void dessineCarre( cairo_t* cr, int ligne, int colonne, char c)
   cairo_set_source_rgb (cr, color.r/2, color.g/2, color.b/2);
 
   cairo_stroke( cr ); // trace la forme actuelle (le même rectangle)
-  // => pas de "_preserve" donc la forme (le rectangle) est oublié.
+  // => pas de "_preserve" donc la forme // Recupère la valeur passée en paramètre.(le rectangle) est oublié.
 }
 
 void dessineGrille( cairo_t* cr, Grille g )
