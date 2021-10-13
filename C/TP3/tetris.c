@@ -144,7 +144,7 @@ void ecrireCase(Grille g, int h, int l, char c)
   }
   else
   {
-    printf("/!\\ Position de la case invalide /!\\");
+    // printf("/!\\ Position de la case invalide /!\\");
   }
 }
 
