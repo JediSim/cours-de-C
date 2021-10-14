@@ -19,3 +19,5 @@ Voir fichier PICHENOT-REY-deduction_naturelle.v
 Q10 :
 La preuve ne fonctionne pas car on ne peut pas prouver un raisonnement recursif sans preuve recusrsive.
 
+Q13 :
+On ne peut pas effectuer une preuve par recursivité sur deux fonction en même temps.
