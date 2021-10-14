@@ -254,7 +254,7 @@ int estPosable(Grille g, Piece* piece, int h, int l)
 int hauteurExacte( Grille g, int col_gauche, Piece* piece )
 {
   int h = HAUTEUR-piece->hauteur;
-  for(; estPosable(g, piece, h, col_gauche) && h >= 0; h--);
+  for(; h >= 0 && estPosable(g, piece, h, col_gauche) ; h--);
   return h+1;
 }
 
