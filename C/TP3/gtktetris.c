@@ -8,30 +8,39 @@
 
 gboolean gauche( GtkWidget *widget, gpointer data )
 {
-  GtkWidget* window = (GtkWidget*)gtk_widget_get_window(widget);
   // Recupère la valeur passée en paramètre.
   Jeu* j = (Jeu*) data;
-  if (j->col > 1)
+  if (j->col > 0)
   {
     j->col = j->col-1;
   }
 
-  printf( "Gauche, val=%d\n", j->col); // affichera 17
-  gtk_widget_queue_draw( window );
+  gtk_widget_queue_draw( j->drawing_area );
   return TRUE; // Tout s'est bien passé
 }
 
 gboolean droite( GtkWidget *widget, gpointer data )
 {
+  // Recupère la valeur passée en paramètre.
   Jeu* j = (Jeu*) data;
-  printf( "Droite, val=%d\n", j->score ); // affichera 17
+  if (j->col < LARGEUR-j->piece.largeur)
+  {
+    j->col = j->col+1;
+  }
+
+  gtk_widget_queue_draw( j->drawing_area );
   return TRUE; // Tout s'est bien passé
 }
 
 gboolean bas( GtkWidget *widget, gpointer data )
 {
   Jeu* j = (Jeu*) data;
-  printf( "Bas, val=%d\n", j->score ); // affichera 17
+
+  int h = hauteurExacte(j->g, j->col, &(j->piece));
+  ecrirePiece(j->g, j->piece, h, j->col);
+
+  j->piece = pieceAleatoire( j->tab );
+  gtk_widget_queue_draw( j->drawing_area );
   return TRUE; // Tout s'est bien passé
 }
 
@@ -105,7 +114,7 @@ void nouvellePiece( Jeu* j )
 
 void dessinePiece( cairo_t* cr, Jeu* j )
 {
-  int col = j->col + MARGE_LARGEUR/2;
+  int col = j->col; //+ MARGE_LARGEUR/2;
   Piece p = j->piece;
 
   for (int h = 0; h < p.hauteur; h++) {
@@ -213,6 +222,7 @@ void creerIHM( Jeu* j )
 
   // DRAWING_AREA
   drawing_area = gtk_drawing_area_new ();
+  j->drawing_area = drawing_area;
   // largeur=TAILLE_CARRE*(LARGEUR+4), hauteur = TAILLE_CARRE*(HAUTEUR+7)).
   gtk_widget_set_size_request (drawing_area,
                               TAILLE_CARRE * ( LARGEUR + MARGE_LARGEUR ),
