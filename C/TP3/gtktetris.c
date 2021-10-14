@@ -5,6 +5,19 @@
 #include "tetris.h"
 #include "gtktetris.h"
 
+gint timer( gpointer data )
+{
+  Jeu* j = (Jeu*) data;
+  j->delay = j->delay-1;
+
+  char str[10];
+  sprintf(str, "%d", j->delay);
+  j->label_delay = gtk_label_new ( str );
+  printf( "tic\n" );
+  gtk_widget_queue_draw( j->window );
+  g_timeout_add (1000, timer, (gpointer) j); // réenclenche le timer.
+  return 0;
+}
 
 gboolean gauche( GtkWidget *widget, gpointer data )
 {
@@ -15,7 +28,7 @@ gboolean gauche( GtkWidget *widget, gpointer data )
     j->col = j->col-1;
   }
 
-  gtk_widget_queue_draw( j->drawing_area );
+  gtk_widget_queue_draw( j->window );
   return TRUE; // Tout s'est bien passé
 }
 
@@ -28,7 +41,7 @@ gboolean droite( GtkWidget *widget, gpointer data )
     j->col = j->col+1;
   }
 
-  gtk_widget_queue_draw( j->drawing_area );
+  gtk_widget_queue_draw( j->window );
   return TRUE; // Tout s'est bien passé
 }
 
@@ -40,7 +53,7 @@ gboolean bas( GtkWidget *widget, gpointer data )
   ecrirePiece(j->g, j->piece, h, j->col);
 
   j->piece = pieceAleatoire( j->tab );
-  gtk_widget_queue_draw( j->drawing_area );
+  gtk_widget_queue_draw( j->window );
   return TRUE; // Tout s'est bien passé
 }
 
@@ -222,7 +235,7 @@ void creerIHM( Jeu* j )
 
   // DRAWING_AREA
   drawing_area = gtk_drawing_area_new ();
-  j->drawing_area = drawing_area;
+  j->window = window;
   // largeur=TAILLE_CARRE*(LARGEUR+4), hauteur = TAILLE_CARRE*(HAUTEUR+7)).
   gtk_widget_set_size_request (drawing_area,
                               TAILLE_CARRE * ( LARGEUR + MARGE_LARGEUR ),
@@ -271,7 +284,10 @@ void creerIHM( Jeu* j )
 
   // SCORE
   j->label_score = gtk_label_new ( "score R" );
-  j->label_delay = gtk_label_new ( "Delay" );
+
+  char str[10];
+  sprintf(str, "%d", j->delay);
+  j->label_delay = gtk_label_new ( str );
 
   // RIGHT BOX
   right_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 10);
@@ -292,6 +308,12 @@ void creerIHM( Jeu* j )
   gtk_container_add ( GTK_CONTAINER (main_box), left_box );
   gtk_container_add ( GTK_CONTAINER (main_box), right_box );
 
+  //////////////
+  // TIME OUT //
+  //////////////
+
+  g_timeout_add (1000, timer, (gpointer) j );
+
   gtk_widget_show_all( main_box );
 }
 
@@ -308,7 +330,7 @@ int main(int argc, char *argv[]) {
   initialiseGrille( j.g );
   genererPieces( j.tab );
   j.score = 0;
-  j.delay = 1;
+  j.delay = 16;
 
   // TEST ZONE
   Piece p = j.tab[3];

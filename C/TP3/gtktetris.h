@@ -12,7 +12,7 @@ typedef struct {
   int delay; // le delay
   GtkWidget* label_score;
   GtkWidget* label_delay;
-  GtkWidget* drawing_area;
+  GtkWidget* window;
 } Jeu;
 
 typedef struct {
