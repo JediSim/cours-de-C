@@ -10,6 +10,7 @@ typedef struct {
   int col; // la colonne actuelle pour la pièce que l'on cherche à caser.
   int score; // le score
   int delay; // le delay
+  int delay_max;
   GtkWidget* label_score;
   GtkWidget* label_delay;
   GtkWidget* window;

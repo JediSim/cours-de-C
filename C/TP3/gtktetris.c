@@ -8,13 +8,21 @@
 gint timer( gpointer data )
 {
   Jeu* j = (Jeu*) data;
-  j->delay = j->delay-1;
+  if (j->delay > 0)
+  {
+    j->delay = j->delay-1;
 
-  char str[10];
-  sprintf(str, "%d", j->delay);
-  j->label_delay = gtk_label_new ( str );
-  printf( "tic\n" );
-  gtk_widget_queue_draw( j->window );
+    char str[10];
+    sprintf(str, "%d", j->delay);
+    gtk_label_set_text( GTK_LABEL( j->label_delay ), str );
+  }
+  else
+  {
+    j->delay = j->delay_max;
+    bas(j->window, data);
+  }
+  
+  gtk_widget_queue_draw( j->window);
   g_timeout_add (1000, timer, (gpointer) j); // réenclenche le timer.
   return 0;
 }
@@ -53,6 +61,13 @@ gboolean bas( GtkWidget *widget, gpointer data )
   ecrirePiece(j->g, j->piece, h, j->col);
 
   j->piece = pieceAleatoire( j->tab );
+  
+  j->delay = j->delay_max;
+
+  char str[10];
+  sprintf(str, "%d", j->delay);
+  gtk_label_set_text( GTK_LABEL( j->label_delay ), str );
+
   gtk_widget_queue_draw( j->window );
   return TRUE; // Tout s'est bien passé
 }
@@ -91,7 +106,7 @@ void dessineCarre( cairo_t* cr, int ligne, int colonne, char c)
 {
   Color color = getColor(c);
 
-  if (color.r == 1.0 && color.g == 1.0 && color.b == 1.0) return; // white
+  // if (color.r == 1.0 && color.g == 1.0 && color.b == 1.0) return; // white
 
   cairo_set_source_rgb (cr, color.r, color.g, color.b);
   cairo_rectangle (cr,
@@ -331,6 +346,7 @@ int main(int argc, char *argv[]) {
   genererPieces( j.tab );
   j.score = 0;
   j.delay = 16;
+  j.delay_max = 16;
 
   // TEST ZONE
   Piece p = j.tab[3];
