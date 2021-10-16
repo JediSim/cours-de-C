@@ -1,4 +1,4 @@
-#define TAILLE_CARRE 16
+#define TAILLE_CARRE 30
 #define MARGE_LARGEUR 4
 #define MARGE_HAUTE 5
 #define MARGE_BASSE 2
@@ -13,7 +13,7 @@ typedef struct {
   int delay_max;
   GtkWidget* label_score;
   GtkWidget* label_delay;
-  GtkWidget* window;
+  GtkWidget* drawing_area;
 } Jeu;
 
 typedef struct {
@@ -21,6 +21,14 @@ typedef struct {
   double g;
   double b;
 } Color;
+
+gboolean rot_gauche( GtkWidget *widget, gpointer data );
+
+gboolean rot_droite( GtkWidget *widget, gpointer data );
+
+void setScoreLabel( Jeu* j, int score );
+
+gint timer( gpointer data );
 
 gboolean gauche( GtkWidget *widget, gpointer data );
 
@@ -35,6 +43,10 @@ Color getColor(char c);
 void dessineCarre( cairo_t* cr, int ligne, int colonne, char c);
 
 void dessineGrille( cairo_t* cr, Grille g );
+
+void nouvellePiece( Jeu* j );
+
+void dessinePiece( cairo_t* cr, Jeu* j );
 
 gboolean realize_evt_reaction( GtkWidget *widget, gpointer data );
 
