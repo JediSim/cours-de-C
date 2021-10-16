@@ -5,6 +5,31 @@
 #include "tetris.h"
 #include "gtktetris.h"
 
+gboolean rot_gauche( GtkWidget *widget, gpointer data )
+{
+  Jeu* j = (Jeu*) data;
+  j->piece = j->tab[j->piece.rotG];
+
+  gtk_widget_queue_draw( j->drawing_area );
+  return TRUE;
+}
+
+gboolean rot_droite( GtkWidget *widget, gpointer data )
+{
+  Jeu* j = (Jeu*) data;
+  j->piece = j->tab[j->piece.rotD];
+
+  gtk_widget_queue_draw( j->drawing_area );
+  return TRUE;
+}
+
+void setScoreLabel( Jeu* j, int score )
+{
+  char str[10];
+  sprintf(str, "score %d", score);
+  gtk_label_set_text( GTK_LABEL( j->label_score ), str );
+}
+
 gint timer( gpointer data )
 {
   Jeu* j = (Jeu*) data;
@@ -19,10 +44,10 @@ gint timer( gpointer data )
   else
   {
     j->delay = j->delay_max;
-    bas(j->window, data);
+    bas(j->drawing_area, data);
   }
   
-  gtk_widget_queue_draw( j->window);
+  gtk_widget_queue_draw( j->label_delay );
   g_timeout_add (1000, timer, (gpointer) j); // réenclenche le timer.
   return 0;
 }
@@ -36,7 +61,7 @@ gboolean gauche( GtkWidget *widget, gpointer data )
     j->col = j->col-1;
   }
 
-  gtk_widget_queue_draw( j->window );
+  gtk_widget_queue_draw( j->drawing_area);
   return TRUE; // Tout s'est bien passé
 }
 
@@ -49,7 +74,7 @@ gboolean droite( GtkWidget *widget, gpointer data )
     j->col = j->col+1;
   }
 
-  gtk_widget_queue_draw( j->window );
+  gtk_widget_queue_draw( j->drawing_area);
   return TRUE; // Tout s'est bien passé
 }
 
@@ -58,7 +83,21 @@ gboolean bas( GtkWidget *widget, gpointer data )
   Jeu* j = (Jeu*) data;
 
   int h = hauteurExacte(j->g, j->col, &(j->piece));
-  ecrirePiece(j->g, j->piece, h, j->col);
+
+  if (estFini(j->piece, h)) 
+  {
+      initialiseGrille( j->g );
+      setScoreLabel( j, 0 );
+      j->score = 0;
+  }
+  else
+  {
+      ecrirePiece(j->g, j->piece, h, j->col);
+      nettoyer(j->g);
+      j->score += 5;
+      setScoreLabel(j, j->score );
+  }
+
 
   j->piece = pieceAleatoire( j->tab );
   
@@ -68,14 +107,22 @@ gboolean bas( GtkWidget *widget, gpointer data )
   sprintf(str, "%d", j->delay);
   gtk_label_set_text( GTK_LABEL( j->label_delay ), str );
 
-  gtk_widget_queue_draw( j->window );
+  gtk_widget_queue_draw( j->drawing_area );
   return TRUE; // Tout s'est bien passé
 }
 
 gboolean new( GtkWidget *widget, gpointer data )
 {
   Jeu* j = (Jeu*) data;
-  printf( "New, val=%d\n", j->score ); // affichera 17
+
+  initialiseGrille( j->g );
+  genererPieces( j->tab );
+  j->score = 0;
+  setScoreLabel(j, 0);
+  j->delay = j->delay_max;
+
+  gtk_widget_queue_draw( gtk_widget_get_toplevel(widget) );
+
   return TRUE; // Tout s'est bien passé
 }
 
@@ -106,7 +153,7 @@ void dessineCarre( cairo_t* cr, int ligne, int colonne, char c)
 {
   Color color = getColor(c);
 
-  // if (color.r == 1.0 && color.g == 1.0 && color.b == 1.0) return; // white
+  if (color.r == 1.0 && color.g == 1.0 && color.b == 1.0) return; // white
 
   cairo_set_source_rgb (cr, color.r, color.g, color.b);
   cairo_rectangle (cr,
@@ -142,8 +189,12 @@ void nouvellePiece( Jeu* j )
 
 void dessinePiece( cairo_t* cr, Jeu* j )
 {
-  int col = j->col; //+ MARGE_LARGEUR/2;
+  if (j->col + j->piece.largeur >= LARGEUR)
+    j->col -= j->col + j->piece.largeur - LARGEUR;
+
+  int col = j->col;
   Piece p = j->piece;
+
 
   for (int h = 0; h < p.hauteur; h++) {
     for (int l = 0; l < p.largeur; l++) {
@@ -229,6 +280,9 @@ void creerIHM( Jeu* j )
   GtkWidget* right;
   GtkWidget* down;
 
+  GtkWidget* tourne_gauche;
+  GtkWidget* tourne_droite;
+
   GtkWidget* button_new;
   GtkWidget* button_quit;
 
@@ -250,7 +304,7 @@ void creerIHM( Jeu* j )
 
   // DRAWING_AREA
   drawing_area = gtk_drawing_area_new ();
-  j->window = window;
+  j->drawing_area = drawing_area;
   // largeur=TAILLE_CARRE*(LARGEUR+4), hauteur = TAILLE_CARRE*(HAUTEUR+7)).
   gtk_widget_set_size_request (drawing_area,
                               TAILLE_CARRE * ( LARGEUR + MARGE_LARGEUR ),
@@ -268,12 +322,19 @@ void creerIHM( Jeu* j )
   down = gtk_button_new_with_label ( "v" );
   g_signal_connect( down, "clicked" , G_CALLBACK( bas ), j );
 
+  tourne_gauche = gtk_button_new_with_label ( "↺" );
+  g_signal_connect( tourne_gauche, "clicked" , G_CALLBACK( rot_gauche ), j );
+
+  tourne_droite = gtk_button_new_with_label ( "↻" );
+  g_signal_connect( tourne_droite, "clicked" , G_CALLBACK( rot_droite ), j );
 
   // ADD TO CONTAINER
   direction_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 10);
   gtk_container_add( GTK_CONTAINER(direction_box), left);
   gtk_container_add( GTK_CONTAINER(direction_box), down);
   gtk_container_add( GTK_CONTAINER(direction_box), right);
+  gtk_container_add( GTK_CONTAINER(direction_box), tourne_gauche);
+  gtk_container_add( GTK_CONTAINER(direction_box), tourne_droite);
 
   left_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 10);
   gtk_container_add( GTK_CONTAINER(left_box), drawing_area);
@@ -298,7 +359,7 @@ void creerIHM( Jeu* j )
   gtk_container_add( GTK_CONTAINER(control_box), button_quit );
 
   // SCORE
-  j->label_score = gtk_label_new ( "score R" );
+  j->label_score = gtk_label_new ( "score 0" );
 
   char str[10];
   sprintf(str, "%d", j->delay);
@@ -349,8 +410,8 @@ int main(int argc, char *argv[]) {
   j.delay_max = 16;
 
   // TEST ZONE
-  Piece p = j.tab[3];
-  ecrirePiece(j.g, p, hauteurExacte(j.g, 1, &p), 1);
+  //Piece p = j.tab[3];
+  //ecrirePiece(j.g, p, hauteurExacte(j.g, 1, &p), 1);
   nouvellePiece( &j );
   // END TEST ZONE
 
