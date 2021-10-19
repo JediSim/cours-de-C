@@ -1,4 +1,7 @@
-# Automates et Grammaires
+---
+title : "Automates et Grammaires"
+output : "Automates et Grammaires"
+---
 
 1. Langages rationnels et expressions régulières
 2. Automates déterministes
@@ -94,4 +97,29 @@ pour chaque lettre A du mot faire
 FinPour
 retourner ContientMotVide(exp)
 ```
+
+# Automates finis
+
+# I\ De la dérivation aux automates
+
+## 2) Dérivation sur un exemple
+
+alphabet : $\sum = \{a,b\}$
+
+ER : $R = a^{*}b+b^{*}a$
+
+on dérive avec chaque caractère de l'alphabet :
+
+- $R/a = a^{b}+\epsilon = R_{1}$
+- $R/b = \epsilon + b^{*}a = R_{2}$
+
+On dérive jusqu'aux expression que l'on connait déjà :
+
+- $R_{1}/a = a^{*}b = R_{3}$
+- .
+- .
+- .
+- $R_{6}/b = \emptyset = R_{6}$
+
+Il existe un nombre fini de dérivé mais ce n'est pas démontré.
 
