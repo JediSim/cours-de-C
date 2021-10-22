@@ -212,3 +212,122 @@ On a vu comment passer d'une ER à un automates. On va voir comment passer d'un 
 
 ## I\ Algorithme
 
+On va modifier notre automate au fur et a mesure, en lui ajoutant puis en supprimant des états.
+
+On va effectuer l'algo sur l'automate ci-dessous.
+
+```dot
+digraph G {
+    0 [label=0]
+    1 [label=1]
+    2 [label=2]
+    3 [label=3,color=red]
+    4 [label=4,color=red]
+
+    0 -> 2 [label="b"]
+    0 -> 1 [label=a]
+    1 -> 0 [label=a]
+    1 ->1 [label=b]
+    2 -> 3 [label=c]
+    2 -> 3 [label=b]
+    2 -> 2 [label=c]
+    1 -> 3 [label=a]
+    1 -> 4 [label=c]
+    3 -> 3 [label=a] 
+
+    {rankdir=TB; 1 2}
+
+}
+
+```
+
+### 1) initialisation
+
+On commence par ajouter un état : $\omega$ ***, qui devient l'unique état final***.
+
+```dot
+digraph G {
+    0 [label=0]
+    1 [label=1]
+    2 [label=2]
+    3 [label=3]
+    4 [label=4]
+    w [label="w",color=red]
+
+    0 -> 2 [label="b"]
+    0 -> 1 [label=a]
+    1 -> 0 [label=a]
+    1 ->1 [label=b]
+    2 -> 3 [label=c]
+    2 -> 3 [label=b]
+    2 -> 2 [label=c]
+    1 -> 3 [label=a]
+    1 -> 4 [label=c]
+    3 -> 3 [label=a] 
+    4 -> w [label=1]
+    3 -> w [label=1]
+
+    {rankdir=TB; 1 2}
+
+}
+
+```
+
+On ajoute un second état $\alpha$, ***unique état initial***.
+
+```dot
+digraph G {
+    epsilon [label=E]
+    0 [label=0]
+    1 [label=1]
+    2 [label=2]
+    3 [label=3]
+    4 [label=4]
+    w [label="w",color=red]
+
+    epsilon -> 0 [label="1"]
+    0 -> 2 [label="b"]
+    0 -> 1 [label=a]
+    1 -> 0 [label=a]
+    1 ->1 [label=b]
+    2 -> 3 [label=c]
+    2 -> 3 [label=b]
+    2 -> 2 [label=c]
+    1 -> 3 [label=a]
+    1 -> 4 [label=c]
+    3 -> 3 [label=a] 
+    4 -> w [label=1]
+    3 -> w [label=1]
+
+    {rankdir=TB; 1 2}
+
+}
+
+```
+
+### 2) Itération
+
+On va effectuer deux règles (des transitions ou des états)
+
+#### Elimination des transitions
+
+```dot
+digraph G {
+    a [label=""]
+    b [label=""]
+
+    a -> b [label="R1"]
+    a -> b [label="R2"]
+} 
+```
+
+On élimine comme suit :
+
+```dot
+digraph G {
+    a [label=""]
+    b [label=""]
+
+    a -> b [label="R1 + R2"]
+} 
+```
