@@ -8,16 +8,16 @@ output : "Automates et Grammaires"
 3. Automates non déterministes
 4. Grammaires
 
-# I\ Langages rationnels et expressions régulières
+## I\ Langages rationnels et expressions régulières
 
 valideNumero(numTel,regex)
 
 valide : 07-30-41-24-17
 valide pas : 17-24-11
 
-## 2) Quelques règles
+### 2) Quelques règles
 
-### 1/ Expression régulière en shell
+#### 1/ Expression régulière en shell
 
 - [lo#] soit l, sois o, sois #
 - {7} reppetition (7 fois) ; {3,} min 3 ; {,3} max 3 ; {3,7} entre 3 et 7
@@ -27,7 +27,7 @@ valide pas : 17-24-11
 - \+ : au moins 1 élément
 - ? : zéro ou une fois
 
-### 2/ Expression régulières de Kleene
+#### 2/ Expression régulières de Kleene
 
 * Un alphabet
 
@@ -61,9 +61,9 @@ valide pas : 17-24-11
   * $L(R_{1} . R_{2}) = \{ u.v\ avec\ u \in L(R_{1})\ et\ v \in L(R_{2})$
   * $L(R^{*}) = \{ u^{n} ou\ n \in \N, et u \in L(R)\}$
 
-# II\ Reconnaitre si un mot appartient au langage
+## II\ Reconnaitre si un mot appartient au langage
 
-## 1) Reconnaitre si un mot vide appartient au langage
+### 1) Reconnaitre si un mot vide appartient au langage
 
 On repaire le connecteur principal :
 - si on a un . on regarde qu'il y est le mot vide de chaque coté
@@ -72,9 +72,9 @@ On repaire le connecteur principal :
 - si on a $\epsilon$ il y a le mot vide
 - si on a $\emptyset$ ou un autre caractere il n'y a pas le mot vide
 
-## 2) Dérivation
+### 2) Dérivation
 
-### les régles de dérivation 
+#### les régles de dérivation 
 - $\emptyset/a = \emptyset$
 - $b/a = \emptyset$
 - $\epsilon/a = \emptyset$
@@ -84,7 +84,7 @@ On repaire le connecteur principal :
 - $(e_{1}\ .\ e_{2})/a = e_{1}/a\ .\ e_{2} + e_{2}/a$
 - $e^{*}/a = e/a\ .\ e^{*}$
 
-## 3) Algorithme de reconnaissance de mot
+### 3) Algorithme de reconnaissance de mot
 
 Pour savoir si un mot est dans le langage de l'exp. reg. , on derive l'ER par chaque lettre du mot.
 
@@ -100,9 +100,9 @@ retourner ContientMotVide(exp)
 
 # Automates finis
 
-# I\ De la dérivation aux automates
+## I\ De la dérivation aux automates
 
-## 2) Dérivation sur un exemple
+### 2) Dérivation sur un exemple
 
 alphabet : $\sum = \{a,b\}$
 
@@ -122,4 +122,93 @@ On dérive jusqu'aux expression que l'on connait déjà :
 - $R_{6}/b = \emptyset = R_{6}$
 
 Il existe un nombre fini de dérivé mais ce n'est pas démontré.
+
+### 2) Automates des dérivées
+schéma des passages entre les différentes expressions.
+```dot
+digraph G {
+    R -> R1 [label="a"]
+    R -> R2 [label="b"]
+    R1 -> R3 [label="a"]
+    R1 -> R4 [label="b"]
+    R2 -> R4 [label="a"]
+    R2 -> R5 [label="b"]
+    R3 -> R4 [label="b"]
+    R3 -> R3 [label="a"]
+
+    R5 -> R5 [label="b"]
+    R5 -> R4 [label="a"]
+    R4 -> R6 [label="a,b"]
+    R6 -> R6 [label="a,b"]
+}
+```
+
+- noeud = état
+- flèche = transition
+
+schéma avec état initial et états finaux
+
+```dot
+digraph G {
+    R [label="->R"]
+    R1 [color="red"]
+    R2 [color="red"]
+
+    R -> R1 [label="a"]
+    R -> R2 [label="b"]
+    R1 -> R3 [label="a"]
+    R1 -> R4 [label="b"]
+    R2 -> R4 [label="a"]
+    R2 -> R5 [label="b"]
+    R3 -> R4 [label="b"]
+    R3 -> R3 [label="a"]
+
+    R5 -> R5 [label="b"]
+    R5 -> R4 [label="a"]
+    R4 -> R6 [label="a,b"]
+    R6 -> R6 [label="a,b"]
+
+    R4 [color="red"]
+
+}
+```
+
+### 3) Exercice
+
+montrer que $b^{*}a(a+c)^{*}$
+
+```dot
+digraph G{
+    1 [label="->1"]
+    2 [color="red"]
+    3 [label="3"]
+
+    1 -> 2 [label="a"]
+    1 -> 1 [label=b]
+    2 -> 2 [label="a,c"]
+    1 -> 3 [label=c]
+    2 -> 3 [label=b]
+    3 -> 3 [label="a,b,c"]
+
+    {rank=same; 1 2}
+}
+```
+
+## II\ Automates
+
+Def formel des automates
+
+### 1) Définition
+- Un alphabet : $\sum$
+- Un ensemble fini d'état : $Q$
+- Un état initial : $q_{0}\ \epsilon\ Q$
+- Un ensemble d'états finaux : $F \subset Q$
+- Une fonction de transition : cf TD3
+
+# Des automates aux expressions régulières
+
+## Objectif
+On a vu comment passer d'une ER à un automates. On va voir comment passer d'un automate à une ER
+
+## I\ Algorithme
 
