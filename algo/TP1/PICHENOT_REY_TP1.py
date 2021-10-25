@@ -12,11 +12,15 @@ def affiche_arbre(arbre):
     Procédure qui affiche l'arbre dans la console
     param : [list] arbre
     """
+    # position de la fin de l'étage courant
     end_level=0
+    # on parcourt l'arbre
     for i in range(len(arbre)):
         print(arbre[i],"",end="")
         if i == end_level:
+            # retour a la ligne si on est a la fin de l'étage
             print("")
+            # calcul de l'indice de l'étage suivant
             end_level =(end_level+1)*2
     print("")
 
@@ -103,7 +107,6 @@ def initArbre(listes):
         arbre[i] = val
     arbre=update(arbre,listes)
     return arbre
-
 
 def remonte(arbre,listes,r):
     """ met a jour la feuille correspondante à la valeur r (remonte le minimum de la liste)
