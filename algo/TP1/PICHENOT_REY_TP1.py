@@ -24,18 +24,33 @@ def affiche(arbre,listes,liste_fusion):
     print("Listes : ")
     print(listes)
 
+def calc_mini(sd,sg):
+    if sd != None and sg!=None:
+        # print("on compre la mini entre les deux")
+        mini=min(sd,sg)
+    elif sd==None and sg!=None:
+        # print("sg est None donc on renvoie sd")
+        mini=sg
+    elif sg==None and sd!=None:
+        # print("sd est None donc on renvoie sg")
+        mini=sd
+    else:
+        mini=None
+    
+    return mini
+
 def update(arbre,listes):
     debut_feuilles=len(arbre)-len(listes)
+    # print("ARBRE LISTE : ",arbre)
+
     for i in range(debut_feuilles-1,0,-1):
-        print(i,i*2,i*2+1)
-        if arbre[i*2] != None and arbre[i*2+1]!=None:
-            mini=min(arbre[i*2],arbre[i*2+1])
-        elif arbre[i*2]==None:
-            mini=arbre[i*2+1]
-        else:
-            mini=arbre[i*2]
+        # print("INDICES noeud:",i,"sg : ",i*2+1,"sd : ",i*2+2)
+        # print("VALUES  noeud:",arbre[i],"sg : ",arbre[i*2+1],"sd : ",arbre[i*2+2])
+        mini=calc_mini(arbre[i*2+1],arbre[i*2+2])
+        # print("minimum : ",mini)
         arbre[i]=mini
-    arbre[0]=min(arbre[1],arbre[2])
+    
+    arbre[0]=calc_mini(arbre[1],arbre[2])
 
     return arbre
 
@@ -87,31 +102,21 @@ def remonte(arbre,listes):
             done=True
     return res,arbre
 
-def listes_pas_vide(listes):
-    for l in listes:
-        if l!=[None]:
-            return True
-    return False
+def arbre_pas_vide(arbre):
+    return arbre[0]!=None
         
 
 def fusion(listes):
     liste_fusion = []
     arbre = initArbre(listes)
-    while(listes_pas_vide(listes)):
-    #for i in range(5):
-        print("DEBUT DE LA REMONTE (MAJ FEUILLE)")    
+    affiche(arbre,listes,liste_fusion)
+    while(arbre_pas_vide(arbre)): 
+        
         to_append,arbre=remonte(arbre,listes)
-        print("FIN REMONTE")
-        print("a ajouter",to_append)
         liste_fusion.append(to_append)
-        print("DEBUT DE LA MISE A JOUR")
-        affiche(arbre,listes,liste_fusion)
         arbre= update(arbre,listes)
-        print("FIN DE LA MISE A JOUR")
-        affiche(arbre,listes,liste_fusion)
-    return ...
-
-# arbre = initArbre(listes)
-# affiche(arbre,listes,liste_fusion)
+    affiche(arbre,listes,liste_fusion)
+    
+    
 fusion(listes)
 
