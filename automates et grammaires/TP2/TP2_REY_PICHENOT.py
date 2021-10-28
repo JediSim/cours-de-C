@@ -29,9 +29,6 @@ def is_comment(line):
 def link(line):
     return re.sub("(?i)(https?://[^ (),]+)", r"""<a href="\1">\1</a>""", line)
 
-def link_named(line):
-    return re.sub("(?i)\[(.*) ((./|https?://)[^ (),]+)\]", r"""<a href="\2">\1</a>""", line)
-
 def img(line):
     return re.sub("(?i)\[((./|https?://)[^ ()]*)\]", r"""<img src="\1"/>""", line)
 
@@ -44,12 +41,19 @@ def title(r):
     n=str(len(r.group(1)))
     return "<h"+n+">"+r.group(3)+"</h"+n+">"
 
+
+##################################### QUESTION 8 & 9: #####################################
 def bold(r):
     return "<b>"+r.group(2)+"</b>"
 
 
 def under_line(r):
     return "<u>"+r.group(2)+"</u>"
+
+##################################### QUESTION 10 : #####################################
+
+def link_named(line):
+    return re.sub("(?i)\[(.*) ((./|https?://)[^ (),]+)\]", r"""<a href="\2">\1</a>""", line)
 
 
 ##################################### QUESTION 11 : #####################################
@@ -90,7 +94,7 @@ def process_line(line):
     #### QUESTION 7.2
     line =re.sub(r"""^((=){1,6})[^=](.*)[^=]\1$""", title, line)
 
-
+    #### QUESTION 8 & 9
     #bold
     line =re.sub(r"""(\*\*)([^ \*].*?[^ \*])\1""", bold, line)
     
