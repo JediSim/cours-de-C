@@ -81,12 +81,13 @@ def process_line(line):
     line = line.replace("&","%amp;") 
     #### QUESTION 10
     line =link_named(line)
-    ####QUESTION 6
-    #line = link(line)
-    line = img(line)
 
     ####QUESTION 5
     line=re.sub("(?i)[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}", "EMAIL", line)
+
+    ####QUESTION 6
+    #line = link(line)
+    line = img(line)
 
     #### QUESTION 7.1
     line =re.sub("^[ \t]*TODO:.*$", todo, line)
@@ -101,6 +102,7 @@ def process_line(line):
     # underline
     line =re.sub(r"""(__)([^ _].*?[^ _])\1""", under_line, line)
 
+    #### QUESTION 11
     # rouge
     line =re.sub(r"""([0-9][0-9])-([0-9][0-9])-(([0-9]){4})""", rouge, line)
 
