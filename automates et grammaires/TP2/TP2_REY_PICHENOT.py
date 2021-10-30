@@ -3,7 +3,7 @@
 
 ##################################
 ## INFO502: TP2
-## Charlie Brown, groupe L3-info-a
+## Rey, Pichenot, groupe L3-CMI
 
 import sys
 import re
@@ -14,13 +14,17 @@ def is_comment(line):
     finSpaces=False
     comment=True
     for i in range(len(line)):
+        #on avance jusqu'a ce qu'il y ait autre chose qu'un espace ou qu'une tabulation
         if line[i] != " " and  line[i]!="\t":
             finSpaces=True
+        #si on a lu tout les premiers espaces/tabulations
         if finSpaces:
+            #si il y a trois % d'affilé alors c'est un commentaire
             if ("%%%" in line[i:i+3]):
                 comment=True
             else:
                 comment=False
+            #on sort de la boucle
             break
     return comment
 
@@ -39,16 +43,19 @@ def todo(r):
 
 def title(r):
     n=str(len(r.group(1)))
-    return "<h"+n+">"+r.group(3)+"</h"+n+">"
+    return "\n<h"+n+">"+r.group(3)+"</h"+n+">\n"
 
 
-##################################### QUESTION 8 & 9: #####################################
+##################################### QUESTION 8 & 9 & 13: #####################################
 def bold(r):
     return "<b>"+r.group(2)+"</b>"
 
 
 def under_line(r):
     return "<u>"+r.group(2)+"</u>"
+
+def italic(r):
+    return "<i>"+r.group(2)+"</i>"
 
 ##################################### QUESTION 10 : #####################################
 
@@ -59,11 +66,13 @@ def link_named(line):
 ##################################### QUESTION 11 : #####################################
 def rouge(r):
     valide = True
+    #on regarde si a la date est valide et on la marque non valide si ce n'est pas le cas
     try:
         datetime.datetime(int(r.group(3)), int(r.group(2)), int(r.group(1)))
     except ValueError:
         valide = False
 
+    #affichage en fonction de la validité de la date
     if not(valide):
         return r"""<font color="red">"""+r.group(0)+r"""</font> """
     else:
@@ -92,10 +101,12 @@ def process_line(line):
 
 
     #### QUESTION 7.1
+    # Todo
     line =re.sub("[ \t]*TODO:.*?[\n]", todo, line, flags=re.DOTALL)
 
-    #### QUESTION 7.2
-    line =re.sub(r"""(=+)([^=]*)\\1[\n]""", title, line, flags=re.DOTALL)
+    #### QUESTION 7.2 
+    #  titre
+    line =re.sub(r"""^((=){1,6})[^=](.*?)[^=]\1\n""", title, line, flags=re.DOTALL)
 
     #### QUESTION 8 & 9
     #bold
@@ -108,11 +119,20 @@ def process_line(line):
     # rouge
     line =re.sub(r"""([0-9][0-9])-([0-9][0-9])-(([0-9]){4})""", rouge, line, flags=re.DOTALL)
 
+    #### QUESTION 13
+    # italic
+    line =re.sub(r"""(?<!http\:)(\/\/)([^ \/].*?[^ \/])\1""", italic, line, flags=re.DOTALL)
+    #le regex remaque les // dans les liens. pour fixer le problème il faudrait soit ne pas écrire les liens sous la forme https:// car cette partie serait rajouté dans la fonction link
+    #soit il faudrait modifier le regex qui détecte l'italic en précisant de ne pas détecter si les // sont précédé d'un https: ou d'un http:
+    #nous avons fait une solution simple, il ne faut pas que les // soit précédé d'un http: (cela ne marche pas pour https)
+    
     return line
 
 def FinParagraphe(line):
+    # test si on est a la fin d'un paragraphe.
     for char in line:
-        if char != ' ' and char != '\t':
+        # si un des caractères de la ligne est different de l'espace, d'une tabulation ou d'un retour chariot
+        if char != ' ' and char != '\t' and char !='\n':
             return False
     return True
 
@@ -125,21 +145,30 @@ def main():
         ## suppressions des lignes "commentaires"
         ####### QUESTION 4 :    
         if not(re.match("^[ \t]*%%%.*$",line)): 
-            p += line
+            p += line 
             if(FinParagraphe(line)):
                 # Si on est a la fin du paragraphe
                 p = process_line(p)
-                print(p, end='')
+                if (p.strip("\n\t\r")!=""):
+                    print("<p>",p.strip("\n\t\r"),"</p>")
+                else:
+                    print(p,end='')
                 p = ""
+                # line = line.strip("\n\r")
 
     #dernier paragraphe
     if not(re.match("^[ \t]*%%%.*$",line)): 
         p = process_line(p)
         # affichage du paragraphe traitée
-        print(p)
+        if (p.strip("\n\t\r")!=""):
+            print("<p>",p.strip("\n\t\r"),"</p>")
+        else:
+            print(p,end='')
 
     print("<!--", "-" * 70, "-->")
 
 
 if __name__ == "__main__":
     main()
+
+
