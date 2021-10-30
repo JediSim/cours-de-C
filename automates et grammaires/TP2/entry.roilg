@@ -10,9 +10,9 @@ test@test.fr
 TODO: faire manger des légumes à flo
 
 
-    [univ http://www.univ-smb.fr]
+[univ http://www.univ-smb.fr]
 
-    Le [TP1 ./tp1.html] traitait essentiellement de la commande grep.
+Le [TP1 ./tp1.html] traitait essentiellement de la commande grep.
 
 
 voici une image de céphalopode [./img.png]
@@ -25,11 +25,11 @@ Le nombre 91 n'est pas premier : **97 = 13*7** !
 
 **tet * tert** qfnizelngk,gẑ **fezf**.
 
-Une __grande_ligne__ qui contient du **gras** et du __souligné__.
+Une __grande_ligne__ qui contient du **gras** et du __souligné__
 
 
 
-Voici un lien permettant de [retrouver son chemin http://www.perdu.com].
+%%%Voici un lien permettant de [retrouver son chemin http://www.perdu.com]
 
 12-34-5678
 

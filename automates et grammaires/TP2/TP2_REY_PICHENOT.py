@@ -27,10 +27,10 @@ def is_comment(line):
 
 ##################################### QUESTION 6 : #####################################
 def link(line):
-    return re.sub("(?i)(https?://[^ (),]+)", r"""<a href="\1">\1</a>""", line)
+    return re.sub("(?i)(https?://[^ (),]+)", r"""<a href="\1">\1</a>""", line, flags=re.DOTALL)
 
 def img(line):
-    return re.sub("(?i)\[((./|https?://)[^ ()]*)\]", r"""<img src="\1"/>""", line)
+    return re.sub("(?i)\[((./|https?://)[^ ()]*)\]", r"""<img src="\1"/>""", line, flags=re.DOTALL)
 
 
 ##################################### QUESTION 7 : #####################################
@@ -53,7 +53,7 @@ def under_line(r):
 ##################################### QUESTION 10 : #####################################
 
 def link_named(line):
-    return re.sub("(?i)\[(.*) ((./|https?://)[^ (),]+)\]", r"""<a href="\2">\1</a>""", line)
+    return re.sub("\[([^ ]+) ([^ ]+)\]", r"""<a href="\2">\1</a>""", line, flags=re.DOTALL)
 
 
 ##################################### QUESTION 11 : #####################################
@@ -70,8 +70,6 @@ def rouge(r):
         return r.group(0)
 
 
-
-
 #########################################
 ## fonction à compléter pendant le TP...
 def process_line(line):
@@ -80,57 +78,68 @@ def process_line(line):
     line = line.replace(">","%gt;")
     line = line.replace("&","%amp;") 
     #### QUESTION 10
-    line =link_named(line)
+    line = link_named(line)
 
     ####QUESTION 5
-    line=re.sub("(?i)[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}", "EMAIL", line)
+    line=re.sub("(?i)[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}", "EMAIL", line, flags=re.DOTALL)
 
     ####QUESTION 6
     #line = link(line)
     line = img(line)
 
+    # QUESTION 6 
+    #4/ la modification ne se fait pas car nous modifions d'abord le lien en tant que lien et non en tant qu'image
+
+
     #### QUESTION 7.1
-    line =re.sub("^[ \t]*TODO:.*$", todo, line)
+    line =re.sub("[ \t]*TODO:.*?[\n]", todo, line, flags=re.DOTALL)
 
     #### QUESTION 7.2
-    line =re.sub(r"""^((=){1,6})[^=](.*)[^=]\1$""", title, line)
+    line =re.sub(r"""(=+)([^=]*)\\1[\n]""", title, line, flags=re.DOTALL)
 
     #### QUESTION 8 & 9
     #bold
-    line =re.sub(r"""(\*\*)([^ \*].*?[^ \*])\1""", bold, line)
+    line =re.sub(r"""(\*\*)([^ \*].*?[^ \*])\1""", bold, line, flags=re.DOTALL)
     
     # underline
-    line =re.sub(r"""(__)([^ _].*?[^ _])\1""", under_line, line)
+    line =re.sub(r"""(__)([^ _].*?[^ _])\1""", under_line, line, flags=re.DOTALL)
 
     #### QUESTION 11
     # rouge
-    line =re.sub(r"""([0-9][0-9])-([0-9][0-9])-(([0-9]){4})""", rouge, line)
+    line =re.sub(r"""([0-9][0-9])-([0-9][0-9])-(([0-9]){4})""", rouge, line, flags=re.DOTALL)
 
     return line
 
+def FinParagraphe(line):
+    for char in line:
+        if char != ' ' and char != '\t':
+            return False
+    return True
 
 ############################################################
 ## fonction principale, appelée depuis la ligne de commandes
 def main():
     print("<!--", "-" * 70, "-->")
+    p = ""
     for line in sys.stdin:
-        # suppression des symboles de fin de ligne
-        line = line.strip("\n\r")
-
         ## suppressions des lignes "commentaires"
         ####### QUESTION 4 :    
         if not(re.match("^[ \t]*%%%.*$",line)): 
-            # traitement de la ligne
-            line = process_line(line)
-            # affichage de la ligne traitée
-            print("<p>"+line+"</p>")
+            p += line
+            if(FinParagraphe(line)):
+                # Si on est a la fin du paragraphe
+                p = process_line(p)
+                print(p, end='')
+                p = ""
+
+    #dernier paragraphe
+    if not(re.match("^[ \t]*%%%.*$",line)): 
+        p = process_line(p)
+        # affichage du paragraphe traitée
+        print(p)
 
     print("<!--", "-" * 70, "-->")
 
 
 if __name__ == "__main__":
     main()
-
-
-# QUESTION 6 
-#4/ la modification ne se fait pas car nous modifions d'abord le lien en tant que lien et non en tant qu'image
