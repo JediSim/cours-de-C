@@ -3,12 +3,15 @@ title : "Automates et Grammaires"
 output : "Automates et Grammaires"
 ---
 
+
+
 1. Langages rationnels et expressions régulières
 2. Automates déterministes
 3. Automates non déterministes
 4. Grammaires
 
 ## I\ Langages rationnels et expressions régulières
+
 
 valideNumero(numTel,regex)
 
