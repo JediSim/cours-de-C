@@ -59,3 +59,5 @@ print("Temps pour le trie de Dobosiewicz :",end_dobosiewicz-start_dobosiewicz)
 # trie = sorted(l)
 # end_py = time.perf_counter()
 # print("Temps pour le trie de pyton :",end_py-start_py)
+
+
