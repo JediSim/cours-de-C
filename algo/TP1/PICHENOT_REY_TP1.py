@@ -32,20 +32,22 @@ def arbre_pas_vide(arbre):
     """
     return arbre[0]!=None
 
-def printNiveau(a,feuille,n):
+def printNiveau(a,nb,feuille,n,listes):
+
+    debut_feuilles=len(a)-len(listes)
     for i in range(0,2*n):
         print(" "*2,end="")
     if feuille:
-        print(f"{bcolors.OKBLUE}{a}{bcolors.ENDC}")
+        print(f"{bcolors.OKBLUE}{a[nb]}{bcolors.ENDC}",f"{bcolors.OKCYAN}{listes[nb-debut_feuilles]}{bcolors.ENDC}")
     else:
-        print(a)
+        print(a[nb])
 
-def affiche_arbre2(a,i,niveau,nbf):
+def affiche_arbre2(a,i,niveau,nbf,listes):
 
     if i < len(a):
-        affiche_arbre2(a,i*2+1,niveau+1,nbf)
-        printNiveau(a[i],i>=len(a)-nbf,niveau)
-        affiche_arbre2(a,i*2+2,niveau+1,nbf)
+        affiche_arbre2(a,i*2+1,niveau+1,nbf,listes)
+        printNiveau(a,i,i>=len(a)-nbf,niveau,listes)
+        affiche_arbre2(a,i*2+2,niveau+1,nbf,listes)
 
 
 def affiche_arbre(arbre,n):
@@ -203,7 +205,7 @@ def fusion(listes):
     #affiche(arbre,listes,liste_fusion) #affiche avant trie
     print("################# ARBRE INITIAL #################")
 
-    affiche_arbre2(arbre,0,1,len(listes))
+    affiche_arbre2(arbre,0,1,len(listes),listes)
     cptIteration = 0
 
     #tant que l'arbre n'est pas vide
@@ -218,7 +220,7 @@ def fusion(listes):
         
         cptIteration+=1
         print("################# ARBRE ITERATION " + str(cptIteration) + " #################")
-        affiche_arbre2(arbre,0,1,len(listes))
+        affiche_arbre2(arbre,0,1,len(listes),listes)
 # affiche_arbre2(arbre,len(listes))
 
 

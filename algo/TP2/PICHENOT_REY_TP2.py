@@ -61,3 +61,16 @@ print("Temps pour le trie de Dobosiewicz :",end_dobosiewicz-start_dobosiewicz)
 # print("Temps pour le trie de pyton :",end_py-start_py)
 
 
+#PARTIE 2
+
+#Question 1
+class Noeud:
+    def __init__(self):
+        self.sg = None
+        self.sd = None
+        self.racine = None
+
+#Question 2
+
+
+
