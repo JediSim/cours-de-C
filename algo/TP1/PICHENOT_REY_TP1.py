@@ -1,4 +1,4 @@
-# TP1 Algorithmique info503
+3# TP1 Algorithmique info503
 
 import random
 
@@ -221,7 +221,6 @@ def fusion(listes):
         cptIteration+=1
         print("################# ARBRE ITERATION " + str(cptIteration) + " #################")
         affiche_arbre2(arbre,0,1,len(listes),listes)
-# affiche_arbre2(arbre,len(listes))
 
 
     return liste_fusion
