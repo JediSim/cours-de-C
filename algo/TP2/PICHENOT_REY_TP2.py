@@ -86,6 +86,11 @@ class Arbre:
         print(i,j)
         a[i],a[j] = a[j],a[i] # on permute
 
+    def swapInterArbre(self,ig,id):
+        temp = self.sg[ig]
+        self.sg[ig] = self.sd[id]
+        self.sd[id] = temp
+
     #Question 2
     def updateGauche(self):
         i=len(self.sg)-1
@@ -93,8 +98,17 @@ class Arbre:
             # si le fils est plus petit que son père, 
             if self.sg[i] < self.sg[i//2] :
                 self.swap(self.sg,i,i//2)
-            i = i//2
 
+            if i < len(self.sd):
+                if self.sg[i] >= self.sd[i]:
+                    self.swapInterArbre(i,i)
+                    self.updateDroit()
+            else:
+                if self.sg[i] >= self.sd[i//2]:
+                    self.swapInterArbre(i,i//2)
+                    self.updateDroit()
+            i = i//2
+                
     def updateDroit(self):
         i = len(self.sd)-1
         while(i != 1):
@@ -107,6 +121,14 @@ class Arbre:
             # Si le fils est plus grand que le père,
             if self.sd[i] > self.sd[indice_pere] :
                 self.swap(self.sd,i,indice_pere)
+            if i < len(self.sd):
+                if self.sg[i] >= self.sd[i]:
+                    self.swapInterArbre(i,i)
+                    self.updateDroit()
+            else:
+                if self.sg[i] >= self.sd[i//2]:
+                    self.swapInterArbre(i,i//2)
+                    self.updateDroit()
             i = i//2
         
     def hauteur(self,arbre):
@@ -132,6 +154,7 @@ if __name__ == '__main__':
     a.insert(3)
     a.insert(4)
     a.insert(8)
+    a.insert(42)
 
 
     print("########## sous arbre gauche ##########")
