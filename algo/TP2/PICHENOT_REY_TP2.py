@@ -1,6 +1,7 @@
 # TP2 Algorithmique info503
 import random
 import time
+from math import log,ceil
 #-----QUESTION 1
 def tri_bulle(T):
     """
@@ -36,7 +37,7 @@ def tri_dobosiewicz(tab):
                 
 #-----QUESTION 3
 
-list_size=5000
+list_size=5
 l = [random.randint(0,100) for i in range(list_size)]
 
 print("liste init")
@@ -59,3 +60,84 @@ print("Temps pour le trie de Dobosiewicz :",end_dobosiewicz-start_dobosiewicz)
 # trie = sorted(l)
 # end_py = time.perf_counter()
 # print("Temps pour le trie de pyton :",end_py-start_py)
+
+
+#PARTIE 2
+
+def printNiveau(a,nb,n):
+    for i in range(0,2*n):
+        print(" "*2,end="")
+    print(a[nb])
+
+def affiche_arbre(a,i,niveau):
+    if i < len(a):
+        affiche_arbre(a,i*2+1,niveau+1)
+        printNiveau(a,i,niveau)
+        affiche_arbre(a,i*2+2,niveau+1)
+
+#Question 1
+class Arbre:
+    def __init__(self,sg,sd):
+        self.sg = [-1]+sg
+        self.sd = [-1]+sd
+
+    def swap(self,a,i,j):
+        print(a)
+        print(i,j)
+        a[i],a[j] = a[j],a[i] # on permute
+
+    #Question 2
+    def updateGauche(self):
+        i=len(self.sg)-1
+        while(i != 1):
+            # si le fils est plus petit que son père, 
+            if self.sg[i] < self.sg[i//2] :
+                self.swap(self.sg,i,i//2)
+            i = i//2
+
+    def updateDroit(self):
+        i = len(self.sd)-1
+        while(i != 1):
+            print("on check le noeud :",self.sd[i])
+            indice_pere = i//2
+            if i/2<1:
+                indice_pere=0
+            print("calc",i//2,"|",i/2)
+            print("indice_pere",indice_pere)
+            # Si le fils est plus grand que le père,
+            if self.sd[i] > self.sd[indice_pere] :
+                self.swap(self.sd,i,indice_pere)
+            i = i//2
+        
+    def hauteur(self,arbre):
+        epsilon=0.0000001
+        return ceil(log(len(arbre))/log(2)+epsilon)
+
+    def insert(self,n):
+        if (self.hauteur(self.sd) == self.hauteur(self.sg)):
+            self.sg.append(n)
+            self.updateGauche()
+        elif (self.hauteur(self.sd) < self.hauteur(self.sg)):
+            self.sd.append(n)
+            self.updateDroit()
+
+         
+
+if __name__ == '__main__':
+    sArbreG = [4,12,7,15,19,9,10]
+    sArbreD = [43,26,16,18]
+    a = Arbre(sArbreG,sArbreD)
+    a.insert(2)
+    a.insert(1)
+    a.insert(3)
+    a.insert(4)
+    a.insert(8)
+
+
+    print("########## sous arbre gauche ##########")
+    # print(a.sg)
+    affiche_arbre(a.sg[1::],0,1)
+    print("########## sous arbre droit ##########")
+    # print(a.sd)
+    affiche_arbre(a.sd[1::],0,1)
+    
