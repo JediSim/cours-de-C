@@ -77,19 +77,6 @@ def affiche_arbre(a,i,niveau):
 
 #Question 1
 class Arbre:
-    def __init__(self,sg,sd):
-        self.sg = [-1]+sg
-        self.sd = [-1]+sd
-
-    def swap(self,a,i,j):
-        print(a)
-        print(i,j)
-        a[i],a[j] = a[j],a[i] # on permute
-
-    def swapInterArbre(self,ig,id):
-        temp = self.sg[ig]
-        self.sg[ig] = self.sd[id]
-        self.sd[id] = temp
 
     #Question 2
     def updateGauche(self):
@@ -130,6 +117,25 @@ class Arbre:
                     self.swapInterArbre(i,i//2)
                     self.updateDroit()
             i = i//2
+
+    def __init__(self,sg,sd):
+        self.sg = [-1]+sg
+        self.sd = [-1]+sd
+        
+        self.updateGauche()
+        self.updateDroit()
+
+    def swap(self,a,i,j):
+        print(a)
+        print(i,j)
+        a[i],a[j] = a[j],a[i] # on permute
+
+    def swapInterArbre(self,ig,id):
+        temp = self.sg[ig]
+        self.sg[ig] = self.sd[id]
+        self.sd[id] = temp
+
+    
         
     def hauteur(self,arbre):
         epsilon=0.0000001
@@ -155,6 +161,8 @@ if __name__ == '__main__':
     a.insert(4)
     a.insert(8)
     a.insert(42)
+    for i in range(0,13):
+        a.insert(random.randint(0,100))
 
 
     print("########## sous arbre gauche ##########")
