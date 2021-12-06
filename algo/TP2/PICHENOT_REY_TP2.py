@@ -77,45 +77,71 @@ def affiche_arbre(a,i,niveau):
 
 #Question 1
 class Arbre:
-    def __init__(self,sg,sd):
-        self.sg = [-1]+sg
-        self.sd = [-1]+sd
-
-    def swap(self,a,i,j):
-        print(a)
-        print(i,j)
-        a[i],a[j] = a[j],a[i] # on permute
 
     #Question 2
+    def updateDroit(self):
+        i = len(self.sd)-1
+        while(i != 1):
+            indice_pere = i//2
+            if i/2<1:
+                indice_pere=0
+            # Si le fils est plus grand que le père,
+            if self.sd[i] > self.sd[indice_pere] :
+                self.swap(self.sd,i,indice_pere)
+            if i < len(self.sd):
+                if self.sg[i] >= self.sd[i]:
+                    self.swapInterArbre(i,i)
+                    self.updateGauche()
+            else:
+                if self.sg[i] >= self.sd[i//2]:
+                    self.swapInterArbre(i,i//2)
+                    self.updateGauche()
+            i = i-1
+
     def updateGauche(self):
         i=len(self.sg)-1
         while(i != 1):
             # si le fils est plus petit que son père, 
             if self.sg[i] < self.sg[i//2] :
                 self.swap(self.sg,i,i//2)
-            i = i//2
 
-    def updateDroit(self):
-        i = len(self.sd)-1
-        while(i != 1):
-            print("on check le noeud :",self.sd[i])
-            indice_pere = i//2
-            if i/2<1:
-                indice_pere=0
-            print("calc",i//2,"|",i/2)
-            print("indice_pere",indice_pere)
-            # Si le fils est plus grand que le père,
-            if self.sd[i] > self.sd[indice_pere] :
-                self.swap(self.sd,i,indice_pere)
-            i = i//2
-        
+            if i < len(self.sd):
+                if self.sg[i] >= self.sd[i]:
+                    self.swapInterArbre(i,i)
+                    self.updateDroit()
+            else:
+                if self.sg[i] >= self.sd[i//2]:
+                    self.swapInterArbre(i,i//2)
+                    self.updateDroit()
+            i = i-1
+    
+
+    def __init__(self,sg,sd):
+        self.sg = [-1]+sg
+        self.sd = [-1]+sd
+
+        self.updateGauche()
+        self.updateDroit()
+
+    def swap(self,a,i,j):
+        a[i],a[j] = a[j],a[i] # on permute
+
+    def swapInterArbre(self,ig,id):
+        temp = self.sg[ig]
+        self.sg[ig] = self.sd[id]
+        self.sd[id] = temp
+
+    
     def hauteur(self,arbre):
         epsilon=0.0000001
         return ceil(log(len(arbre))/log(2)+epsilon)
 
     def insert(self,n):
+        if len(self.sg) == 0:
+            self.sg.append(n)
         if (self.hauteur(self.sd) == self.hauteur(self.sg)):
             self.sg.append(n)
+
             self.updateGauche()
         elif (self.hauteur(self.sd) < self.hauteur(self.sg)):
             self.sd.append(n)
@@ -124,20 +150,24 @@ class Arbre:
          
 
 if __name__ == '__main__':
-    sArbreG = [4,12,7,15,19,9,10]
-    sArbreD = [43,26,16,18]
+    sArbreG = [random.randint(1,100)]
+    sArbreD = [random.randint(1,100)]
     a = Arbre(sArbreG,sArbreD)
     a.insert(2)
     a.insert(1)
     a.insert(3)
     a.insert(4)
     a.insert(8)
+    a.insert(42)
+    for i in range(0,13):
+        a.insert(random.randint(1,100))
+        print("########## sous arbre gauche ##########")
+        # print(a.sg)
+        affiche_arbre(a.sg[1::],0,1)
+        print("########## sous arbre droit ##########")
+        # print(a.sd)
+        affiche_arbre(a.sd[1::],0,1)
 
 
-    print("########## sous arbre gauche ##########")
-    # print(a.sg)
-    affiche_arbre(a.sg[1::],0,1)
-    print("########## sous arbre droit ##########")
-    # print(a.sd)
-    affiche_arbre(a.sd[1::],0,1)
+    
     
