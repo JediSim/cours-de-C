@@ -9,3 +9,4 @@
 # !*.cnf
 *.exe
 *.zip
+/noSQL\ Graph/data

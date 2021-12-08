@@ -1,0 +1,17 @@
+version: '3.1'
+
+services:
+
+  neo4j:
+    image: 'neo4j:community'
+    container_name: neo4j
+    user: ${UID}:${GID}
+    ports:
+      - 7474:7474 # Web interface
+      - 7687:7687 # Communication protocol
+    environment:
+      NEO4J_AUTH: neo4j/${PASSWORD}
+    env_file:
+      - .env
+    volumes:
+      - ./data:/data
