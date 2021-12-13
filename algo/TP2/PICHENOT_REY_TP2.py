@@ -37,7 +37,7 @@ def tri_dobosiewicz(tab):
                 
 #-----QUESTION 3
 
-list_size=5
+list_size=500
 l = [random.randint(0,100) for i in range(list_size)]
 
 print("liste init")
@@ -150,6 +150,7 @@ class Arbre:
          
 
 if __name__ == '__main__':
+    inp = ""
     sArbreG = [random.randint(1,100)]
     sArbreD = [random.randint(1,100)]
     a = Arbre(sArbreG,sArbreD)
@@ -159,14 +160,18 @@ if __name__ == '__main__':
     a.insert(4)
     a.insert(8)
     a.insert(42)
-    for i in range(0,13):
-        a.insert(random.randint(1,100))
+    for i in range(0,15):
+        nb = random.randint(1,100)
+        a.insert(nb)
+        print("a inserer : ",nb)
         print("########## sous arbre gauche ##########")
         # print(a.sg)
         affiche_arbre(a.sg[1::],0,1)
         print("########## sous arbre droit ##########")
         # print(a.sd)
         affiche_arbre(a.sd[1::],0,1)
+        if inp != "all":
+            inp = input()
 
 
     

@@ -1,4 +1,4 @@
-#define SIZE_BUFFER 100
+#define SIZE_BUFFER 9999
 #define HOME "/home"
 
 #define KNRM  "\x1B[0m"
@@ -21,3 +21,7 @@ void action_pwd();
 void action_ls();
 
 void action_exec(char *exe, char **cmd);
+
+int isIn(char* value, char** string);
+
+void isPipe(char** CMD_ELEMS);
