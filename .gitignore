@@ -10,3 +10,5 @@
 *.exe
 *.zip
 /noSQL\ Graph/data
+*.tar
+/systeme/TP2/sfs
