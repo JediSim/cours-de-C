@@ -42,4 +42,14 @@ En premier le numéro d'inode du repértoire parant, le nom du fichier et le num
 
 3.5 Ajout des liens physiques
 
-Un lien physique créer un nouveau fichier avec le même inode que le fichier lié.
+Un lien physique créer un nouveau fichier avec le même inode que le fichier lié. Ils pointes sur les mêmes blocs tous les deux.
+
+3.6 Ajout des liens logiques
+
+Un lien logique créer un deuxième fichier avec un inode différent et qui à des blocks qui pointes sur les pointeurs de blocks du fichier lié.
+
+3.7 Blocs à accès indirect
+
+
+
+

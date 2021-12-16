@@ -40,6 +40,10 @@ int sfs_get_data_block_nb_from_inode(int nb, int block_idx)
     // TODO check block_idx is a valid block (wrt nd->size)
     inode_t* nd = sfs_get_inode(nb);
     int block_nb;
+    if (!(sfs_block_in_use(block_idx))){
+        errno = EINVAL;
+        return -1;
+    }
 
     if (0 <= block_idx && block_idx < NB_DIRECT_BLOCKS) {
         block_nb = nd->blocks[block_idx];
@@ -741,6 +745,12 @@ int sfs_writelink_inode(const char* target)
     nd->nlinks = 1;
 
     // À FAIRE
+    nd->size = strlen(target);
+    if (nd->size > 48){
+        sfs_write_to_block(nb,0,0,(byte*)target,nd->size);
+    }else{
+        strcpy((char*)sfs_get_block(nd->blocks[0]), target);
+    }
 
     return nb;
 }
@@ -775,6 +785,12 @@ int sfs_readlink_inode(int nb, char* buf, int bufsize)
     }
 
     // À FAIRE
+    if (nd->size > 48){
+        sfs_read_from_block(nb,0,0,(byte*)buf,nd->size);
+    }else{
+        strcpy((char*)sfs_get_block(nd->blocks[0]), buf);
+    }
+    
     return 0;
 }
 
