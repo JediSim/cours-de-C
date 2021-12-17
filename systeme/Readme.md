@@ -18,3 +18,9 @@ le contexte au moment de l'appel fork()
 ## 6.1 Utilisation de la redirection >
 
 ### Expliquez le fonctionnement de cet appel système "dup2 ( fd , STDOUT_FILENO) ;"
+
+### Compiler le garbage collector
+
+```
+gcc -Wall -Werror --std=c99 -Wno-unused-parameters tinygc.c -o tinygc
+```
