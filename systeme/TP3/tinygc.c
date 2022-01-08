@@ -161,6 +161,8 @@ void GC_collect()
     // mark blocks referenced from heap
     // TODO
 
+    // Le heap c'esst une pile avec tous les trucs malloc
+
     // free all unused blocks
     cell_t *tmp;
     p = BLOCKS;
