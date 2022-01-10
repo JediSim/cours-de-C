@@ -1,8 +1,0 @@
-Les parenthèses servent à isoler un mot  à
-l'intérieur d'une phrase.
-
-Remarque :
-On veillera toutefois à ne pas trop en abuser car la mise entre parenthèses
- provoque une rupture 
-dans la phrase et complique sa lecture (et sa
-compréhension).
