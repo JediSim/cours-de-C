@@ -113,5 +113,59 @@ $G = n \times k$
 
 permet de coder des mots de taille k en mots de taille n.
 
+$0110 \rightarrow L_2 \oplus L_3 = 0110011$ 
+
+On prend le message 4 par 4 et on complète le message en fonction de la matrice génératrice.
+
+- question 3 :
+
+la distance de ce code est 3.
+
+- question 4 :
+
+On cherche la plus petite distance de Hamming avec le mot faux. La correction est le mot avec la plus petite distance.
+
+$1101111\ faux \rightsquigarrow 1111111$
+
+$0011111\ faux \rightsquigarrow 0001111$
+
+$0101010\ vrai \rightsquigarrow on\ garde\ le\ même$
+
+- question 6 :
+
+$P = \begin{bmatrix}
+0 & 1 & 1\\
+1 & 0 & 1\\
+1 & 1 & 0\\
+1 & 1 & 1\\
+\hline
+1 & 0 & 0\\
+0 & 1 & 0\\
+0 & 0 & 1
+\end{bmatrix}$
+
+- question 7 :
+
+On prend la matrice de parité et on fait le xor de chaque ligne associer a la position des bits = 1.
+
+$0011001 \rightsquigarrow L_3 \oplus L_4 \oplus L_7 = 110 \oplus 111 \oplus 001$ le mot est correct
+
+$1101001 \rightsquigarrow L_1 \oplus L_2 \oplus L_4 \oplus L_7 = 011 \oplus 101 \oplus 111 \oplus 001$ correct
+
+- question 8 :
 
 ## exo 5
+
+- question 1 :
+
+$3 \oplus 3 = 0\\
+3 \oplus 7 = 4\\
+3 \oplus 4 = 7\\
+5 \oplus f = a$
+
+- question 7 :
+
+$5 \otimes 6 = \exp(\log(5) + \log(6)) = d\\
+2 \otimes 7 = \exp(\log(2) + \log(7)) = e\\
+9 \otimes 3 = \exp(\log(9) + \log(3)) = 3$ /!\ quand on boucle le 15 et le 0 compte pour la meme valeur de l'exp.
+
