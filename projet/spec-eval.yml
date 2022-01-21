@@ -1,0 +1,15 @@
+openapi: 3.0.0
+info:
+  title: Service d'evaluation
+  description: Permet d'évaluer un exercice envoyé par l'élève.
+  version: 0.0.1
+
+servers:
+  - url: https://api.evaluation.fr/v1
+
+paths:
+  /eval:
+    post:
+      summary: Récupère le code à évaluer.
+      requestBody:
+         
