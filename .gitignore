@@ -8,6 +8,7 @@
 # !*.sat
 # !*.cnf
 *.exe
+*.o
 *.zip
 /noSQL\ Graph/data
 *.tar
