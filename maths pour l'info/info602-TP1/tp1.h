@@ -5,7 +5,6 @@
 
 #ifndef _TP1_H
 #define _TP1_H
-
 /* bibliothèques qui peuvent servir... */
 #include <assert.h>
 #include <stdarg.h>

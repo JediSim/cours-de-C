@@ -13,7 +13,7 @@
 ################
 ## à modifier ##
 ################
-NOM ?= harry-potter
+NOM ?= delifer-pichenot
 
 
 # FLAGS = -Wall -std=c99 -Wextra -pedantic -Werror -O3
