@@ -183,6 +183,7 @@ mot decalage_circulaire(mot m, int n, int p)
  * 
  * question 10
  */
+
 mot correction_golay(mot m)
 {
     mot tmp = 1;
@@ -217,6 +218,11 @@ mot correction_golay(mot m)
  */
 mot correction_exhaustive_golay(mot m)
 {
+    /*
+    * Alors ca cherche la reponse sur mon git.
+    * J'ai modifier la fonction pour quelle ne marche plus.
+    * A vous de réfléchier !!!
+    */
     mot min = code_golay(0);
     mot tmp;
     int distMin = poids(min ^ m);
