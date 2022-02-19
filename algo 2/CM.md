@@ -91,3 +91,53 @@ $\Omicron(f(n))\Omicron(g(n)) = \Omicron(f(n)g(n))$
 
 Rq : pour les algos de tri basés sur les comparaisons, $\Omega(n\log n)$
 
+## 4 Calcul de complexité algo
+
+Modèle RAM : suppose que certains calculs sont temps constant.
+- accès mémoire avec entier/réel...
+- opérations arithmetiques, comparaisons
+- appel de fct, passage d'une taille borné de parametres,
+
+- Si $B_1$ $T_1(n)$     
+  alors $B_2$ $T_2(n)$  
+  Sinon $B_3$ $T_3(n)$  
+
+Total : $\Omicron(max(T_1(n), T_2(n), T_3(n)))$
+        $\Omega(min(max(T_1(n), T_2(n)),max(T_1(n)),T_3(n)))$
+
+- For/While
+
+$f(n) \times |B| T(n)$ | $\Omicron(f(n))\Omicron(T(n))$
+
+- Appel d'une fct :
+ - empilement des params
+ - exécution de la fct
+ - valeur de retour
+
+/!\ temps d'execution des fcts récusrsives
+
+Ex difficile :
+
+```pseudo code
+Procedure Syracuse(E n:entier)
+    Si n = 1 alors retourne 1
+    sinon si n est pair
+        alors retourne 1 + Syracuse(n/2)
+    sinon retourne 1 + Syracuse(3n + 1)
+```
+On ne sait pas borner le temps d'éxecution de Syracuse
+
+Un calcul de min est linéaire sur la taille des données
+
+## 5 Complexité usuelles des algos
+
+- Temps constant $\Omicron(1)$ : instruction élémentaires
+- Temps logarithme $\Omicron(\log n)$ : recherche dichotomique
+- Temps linéaire $\Omicron(n)$ : min/max, somme...
+- Temps quasilinéaire $\Omicron(n\log n)$ : tri par tas, tri fusion...
+- Temps quadratique $\Omicron(n^2)$ : tri bulle...
+- Temps cubique $\Omicron(n^3)$ : LU, PLU, sol $Ax = b$, algo naif de produit matrice.
+- Temps polynomial $\Omicron(n^k)$ avec k borné
+- Algo vérifier en temps polynomial, mais pas d'algo polynomial pour le calculer. On pense que $P \neq NP$, mais on est pas sur
+- Temps exponnentiel $\Omicron(a^n)$ avec $a > 1$
+
