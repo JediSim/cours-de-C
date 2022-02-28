@@ -19,3 +19,23 @@ Donc faux
 Donc vrai
 
 4. 
+
+## Exo 2 :
+
+$\begin{bmatrix}
+\Omicron & \Omicron & \Omicron & \Omicron \\
+\Omicron & \Theta & \Omega & \Omega \\
+\Omicron & \Omicron & \Theta & \Omicron \\
+\Omega & \Omega & \Omega & \Omega \\
+\end{bmatrix}$
+
+## Exo 3 :
+
+## Exo 5 :
+
+en fct des parametres : $\Theta(j - (i))$
+en pire cas : $\Theta(n)$
+
+## Exo 7 :
+
+complexité : $\Theta(n^2)$
