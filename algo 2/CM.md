@@ -141,3 +141,27 @@ Un calcul de min est linéaire sur la taille des données
 - Algo vérifier en temps polynomial, mais pas d'algo polynomial pour le calculer. On pense que $P \neq NP$, mais on est pas sur
 - Temps exponnentiel $\Omicron(a^n)$ avec $a > 1$
 
+# II Analyse amortie des algorithmes
+
+- borné es pire cas le temps d'éxécution d'une séquence de m opérations.
+$\rightarrow$ coût amorti de chaque opération correspond au coût réel de cette opération lorsqu'on s'en sert un nombre importatn de fois.
+
+coût amorti $\neq$ coût moyen d'une opération
+
+Plusieurs méthodes existent pour calculer les coûts amorti.
+1. Méthode de l'agrégat.
+On trasse une borne $T_{total}(m)$ qui est majorant du temps d'éxecution total des m opérations
+Le coût amorti de chaque opération sera $T_{total}(m)$
+
+- Illustration 1 :On se donne des opératons sur une pile P
+```
+empiler(P,v)
+Depiler(P) --> val
+MultiDepiler(P,k) --> k 1ère valeur sur la pile
+PileVide(P)? booléen
+```
+
+2. Méthode comptable
+On assigne des coûts amortis ĉ à chaque opération. Parfois le cout amorti ĉ est $\neq$ du cout réel c. de l'opération. La différence ĉ-c quand elle est positive est un crédit que l'on place dans la strucure de données et qui pourra servir à payer des opérations futures. Lorsque ĉ-c est négatif, on dépense un crédit qui était dans la structure de données.
+Il faut évidemment que le crédit total reste positif.
+La somme des ĉ nous donnera le coût amorti total $T_{total}(m)$
