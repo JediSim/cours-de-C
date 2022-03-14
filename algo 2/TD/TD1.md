@@ -39,3 +39,9 @@ en pire cas : $\Theta(n)$
 ## Exo 7 :
 
 complexité : $\Theta(n^2)$
+
+## Exo n trie par selection : 
+
+```
+
+```
