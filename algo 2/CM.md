@@ -165,3 +165,7 @@ PileVide(P)? booléen
 On assigne des coûts amortis ĉ à chaque opération. Parfois le cout amorti ĉ est $\neq$ du cout réel c. de l'opération. La différence ĉ-c quand elle est positive est un crédit que l'on place dans la strucure de données et qui pourra servir à payer des opérations futures. Lorsque ĉ-c est négatif, on dépense un crédit qui était dans la structure de données.
 Il faut évidemment que le crédit total reste positif.
 La somme des ĉ nous donnera le coût amorti total $T_{total}(m)$
+
+Th : Toute séquence de m opération creer/Union/Trouver dont n creer, prend un temps amorti total de $\Omicron(m \alpha(m))$ ou $\alpha(m)$ est une $fct \rightarrow \infty$, mais en pratique ne dépasse pas 4
+Preuve : Utilise la méthode du potentiel.
+
