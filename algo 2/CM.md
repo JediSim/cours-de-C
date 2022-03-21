@@ -169,3 +169,44 @@ La somme des ĉ nous donnera le coût amorti total $T_{total}(m)$
 Th : Toute séquence de m opération creer/Union/Trouver dont n creer, prend un temps amorti total de $\Omicron(m \alpha(m))$ ou $\alpha(m)$ est une $fct \rightarrow \infty$, mais en pratique ne dépasse pas 4
 Preuve : Utilise la méthode du potentiel.
 
+# V Géométrie algorithmique
+
+- algorithmes qui résolvent des probèmes géométriques.
+- robotique, Concept AO, jeux vidéos, calcul scientifique, système d'info géo, etc...
+
+Ici, On va se placer dans le plan
+$\mathbb{R}^2$
+### 1 Notions élémentaires.
+
+Chaque point du plan à deux coordonnées (x,y)
+
+La distance entre 2 points p et q d(p,q) = $\lvert pq \rvert = \sqrt{pq \times pq} = \sqrt{(q_x - p_x)^2 + (q_y - p_y)^2}$
+
+Le segment $[pq]$ est l'ensemble des points "entre p et q"
+$[pq] = \{(1-t)p+tq,t \in [0,1]\}$
+
+droite $(pq)= \{(1-t)p+tq, t \in  \mathbb{R}\}$
+
+les points sur la droite $(pq)$ s'obtiennent par combinaison linéaire de p et q avec une somme de coefficients = 1
+
+### 2 Orientation et produit en croix
+
+On veut déterminer si un point r est à gauche, en face, ou à droite du vecteur $\overrightarrow{pq}$
+
+Sii $\overrightarrow{u}$ et $\overrightarrow{v}$ sont 2 vecteurs, leur produit en croix (ou déterminant) s'écrit.
+
+$\overrightarrow{u} \times \overrightarrow{v}= u_xv_y - u_yv_x$
+
+$\overrightarrow{pq} \times \overrightarrow{pr} > 0 $ si r est à gauche de $\overrightarrow{pq}$
+ = 0 si r sur la droite $(pq)$
+ < 0 si r est à droite de $\overrightarrow{pq}$
+
+<u>Note :</u> si = 0, $\overrightarrow{pq}$ et $\overrightarrow{pr}$ sont colinéaires
+
+Géométriquement, $\overrightarrow{u} \times \overrightarrow{v}$ (ou $det(\overrightarrow{u},\overrightarrow{v})$) est l'aire signée du parallélogramme de coté $\overrightarrow{u}$ et $\overrightarrow{v}$
+
+### 3 Intersection de 2 segments
+
+```
+
+```
