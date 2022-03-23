@@ -14,3 +14,5 @@ tr(A) la trace de A est la sommes des valeurs propres.
 
 $A = PDP^{-1}$
 
+# Approximation d'une intégrale
+
