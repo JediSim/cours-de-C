@@ -15,3 +15,4 @@ procédure tri_insertion(tableau T)
         # placer x dans le "trou" laissé par le décalage
         T[j] ← x 
 ```
+
