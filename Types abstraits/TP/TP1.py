@@ -109,6 +109,23 @@ def assertion3_tas(t):
 
     return est_tas and decroissant and petit
     
+# { p = 1 ET t[1] >= t[2] ET t[2..n] est trié dans l'ordre décroissant } => { t[1..n] est trié dans l'ordre décroissant }
+def assertion4_tas(t):
+    p = t[0]
+    p_est_1 = p == 1 and t[1] >= t[2]
+    decroissant = True
+    for i in range(2, len(t)-1):
+        if t[i] < t[i+1]:
+            decroissant = False
+    
+    partie1 = p_est_1 and decroissant
+
+    partie2 = True
+    for i in range(1,len(t)-1):
+        if t[i] < t[i+1]:
+            partie2 = False
+
+    return not partie1 or partie2
 
 # Permute les éléments i et j du tab
 def permuter(tab, i, j):
@@ -159,13 +176,16 @@ def tri_tas(t):
         assert assertion_est_tas(t, t[0])
     
     # { p = n ET t[1..p] est un tas } => { t[1..n] est un tas }
+    assertion2_tas(t)
 
     while t[0] > 1:
         min = retirer_min(t)
         t[t[0]+1] = min
         # { t[1..p] est un tas ET t[p+1..n] est trié dans l'ordre décroissant ET Pour tout e€[1..p], t[e] >= t[p+1] }
+        assert assertion3_tas(t)
 
     # { p = 1 ET t[1] >= t[2] ET t[2..n] est trié dans l'ordre décroissant } => { t[1..n] est trié dans l'ordre décroissant }
+    assert assertion4_tas(t)
 
 def printNiveau(a,nb,n):
     for _ in range(0,2*n):
@@ -189,4 +209,4 @@ if __name__ == "__main__":
     #     print("Aïe! Notre sémantique n'est pas bonne...") # N'arrive jamais
     tri_tas(tab)
     print("tab trié : ", tab)
-    affiche_arbre(tab,0,1)
+    affiche_arbre(tab[1:],0,1)

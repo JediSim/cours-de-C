@@ -24,10 +24,10 @@
 
 10. I want to be learning from start to finish
 
-|        | Sport | Studying |
-|:------:|:-----:|:--------:|
-|internal|       |          |
-|external|       |          |
+|          | Sport | Studying |
+| :------: | :---: | :------: |
+| internal |       |          |
+| external |       |          |
 
 ## Motivation MOK
 
@@ -60,4 +60,19 @@ $\rightarrow$ all stats up
 - purpose
 
 autonomy/master/purpose is better for all stats of your enterprise
+
+
+## Linkwords
+
+| Giving additional information | Contrast     | Making a general statement | Clarification  | Introducing a cause or a csq |
+| :---------------------------- | :----------- | :------------------------- | :------------- | :--------------------------- |
+| also                          | however      | in general                 | for example    | consequently                 |
+| in addition                   | actually     | on the whole               | in other words | because                      |
+| moreover                      | nevertheless |                            | such as        | therefore                    |
+| as well as                    | yet          |                            | that is to say | as a result                  |
+| besides                       |              |                            | in reality     | thus                         |
+| not only... but               | although     |                            | in fact        | since                        |
+|                               | instead of   | generally speacking        | namely         | hence                        |
+|                               | while        |                            |                |                              |
+|                               | apart from   |                            |                |                              |
 
