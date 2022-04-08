@@ -127,6 +127,18 @@ def assertion4_tas(t):
 
     return not partie1 or partie2
 
+def assertion5_tas(t, j):
+    """ { t[j] est la plus petit des 2 fils s'ils existent ou le fils unique le cas échéant } """
+
+    if j % 2 == 0: # j est le fils gauche
+        # si j+1 n'existe pas, on retourne true
+        if j+1 >= t[0]: # t[0] == taile du tas
+            return True
+        return t[j] <= t[j+1]
+    else: # j est le fils droit
+        return t[j] <= t[j-1]
+
+
 # Permute les éléments i et j du tab
 def permuter(tab, i, j):
     temp = tab[i]
@@ -157,7 +169,10 @@ def retirer_min(t):
             j = 2*i
         else:
             j = 2*i + 1
-        
+
+        # { t[j] est la plus petit des 2 fils s'ils existent ou le fils unique le cas échéant }
+        assert assertion5_tas(t, j)
+
         if t[i] > t[j]:
             permuter(t, i, j)
             i = j
@@ -176,7 +191,7 @@ def tri_tas(t):
         assert assertion_est_tas(t, t[0])
     
     # { p = n ET t[1..p] est un tas } => { t[1..n] est un tas }
-    assertion2_tas(t)
+    assert assertion2_tas(t)
 
     while t[0] > 1:
         min = retirer_min(t)
