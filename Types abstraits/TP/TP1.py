@@ -65,8 +65,8 @@ def tri_insert_seq(tab, i):
             assert assertion3(tab, k, i, x)
         assert assertion4(tab, k, i, x)
         tab[k+1] = x
-        assert estTrieSurInterval(tab, 0, i-1)
-    assert estTrieSurInterval(tab, 0, i-1)
+        assert estTrieSurInterval(tab, 0, i)
+    assert estTrieSurInterval(tab, 0, i)
     return tab
 
 # ===================================================================== tri tas
