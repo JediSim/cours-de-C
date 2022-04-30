@@ -44,7 +44,9 @@ def assertion4(tab, k, i, x):
     if k <= 0:
         troisieme_membre = all([ (tab[j] >= x ) for j in range(1,i)])
 
-    quatrieme_membre = tab[k+2] == tab[k+1] and estTrieSurInterval(tab,0,i-1)
+    quatrieme_membre = estTrieSurInterval(tab,0,i-1)
+    if k+2 < len(tab)-1:
+        quatrieme_membre = quatrieme_membre and tab[k+2] == tab[k+1]
 
     return premier_membre and second_membre or troisieme_membre and quatrieme_membre
     
@@ -216,12 +218,12 @@ def affiche_arbre(a,i,niveau):
 if __name__ == "__main__": 
     # try:
     # tab = [None]
-    tab = [None] + [randint(0, 100) for _ in range(10)]
+    tab = [randint(0, 100) for _ in range(10)]
     print("tab : ", tab)
-    # tab_trie = tri_insert_seq(tab,len(tab)-1)
+    tab_trie = tri_insert_seq(tab,len(tab)-1)
     # print("tab trié : ", tab_trie)
     # except AssertionError:
     #     print("Aïe! Notre sémantique n'est pas bonne...") # N'arrive jamais
-    tri_tas(tab)
-    print("tab trié : ", tab)
-    affiche_arbre(tab[1:],0,1)
+    # tri_tas(tab)
+    print("tab trié : ", tab_trie)
+    # affiche_arbre(tab[1:],0,1)
