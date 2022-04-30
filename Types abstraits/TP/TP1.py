@@ -76,7 +76,7 @@ def assertion_est_tas(t, p):
         if 2*i < p and 2*i+1 < p:
             if t[i] > t[2*i] or t[i] > t[2*i+1]:
                 return False
-    return True    
+    return True 
 
 implique = lambda p, q: not p or q
 # { p = n ET t[1..p] est un tas } => { t[1..n] est un tas }

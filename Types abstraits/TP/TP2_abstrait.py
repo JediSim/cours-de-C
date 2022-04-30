@@ -1,7 +1,26 @@
 from ast import Str
 
 
-class String:
+"""
+Chaine -> notre type abstait pour les chaines
+String -> les caractères de la chaine
+"""
+"""
+Sorte : Chaine
+Utilise : String, Bool
+Operations : 
+    - __eq__ : Chaine -> Bool
+    - __add__ : Chaine -> String
+    - __len__ : Chaine -> Int
+    - __getitem__ : Int -> String
+    - __contains__ : Chaine -> Bool
+    - __str__ : Chaine -> String
+    - __repr__ : Chaine -> String
+    - split : Chaine -> Liste de String
+    - annonce : Chaine -> Bool
+"""
+
+class Chaine:
     
     def __init__(self, string):
         self.string = string
@@ -19,10 +38,10 @@ class String:
         :param other: L'autre objet String que vous souhaitez ajouter
         :return: Un nouvel objet String avec la chaîne concaténée.
         """
-        if isinstance(other, String):
-            return String(self.string + other.string)
+        if isinstance(other, Chaine):
+            return Chaine(self.string + other.string)
         elif isinstance(other, str):
-            return String(self.string + other)
+            return Chaine(self.string + other)
         else:
             raise Exception("Cannot add a string and a non-string object")
     
@@ -92,6 +111,27 @@ class String:
                 return self.string[shift:]
         return ""
 
+
+"""
+Operations :
+    - empiler : Pile -> Pile
+    - depiler : Pile -> element
+    - est_vide : Pile -> Bool
+    - taille_pile : Pile -> Int
+    - affiche : Pile -> String
+
+p: Pile
+e: element
+
+Preconditions:
+    depiler(p) -> e ssi p non vide (est_vide(p) == False)
+
+Axiomes :
+    est_vide(creer_pile()) == True
+    est_vide(empiler(p,e)) == False
+    depiler(empiler(p,e)) == e ssi p n'est pas pleine
+    empiler(pile_pleine(p),e) == pile_pleine(p)
+"""
 class Pile:
 
     def __init__(self,nb_max):
@@ -121,7 +161,7 @@ class Pile:
 class PirePile:
 
     def __init__(self, nb_max):
-        self.string = String("")
+        self.string = Chaine("")
         self.taille = nb_max
     
     def _as_array(self):
@@ -138,8 +178,8 @@ class PirePile:
             raise Exception("Pile vide")
         ret = self._as_array()[-1]
         reste = self._as_array()[:-1]
-        self.string = String("\0".join(reste) + "\0")
-        return String(ret)
+        self.string = Chaine("\0".join(reste) + "\0")
+        return Chaine(ret)
 
     def est_vide(self):
         return len(self.string) == 0
@@ -155,8 +195,8 @@ class PirePile:
 def testString():
     T1 = ("VALEUR", "CATION", "SALON")
     T2 = ("EUROPE", "IONISATION", "NOUVEAU")
-    T1 = (String(x) for x in T1)
-    T2 = (String(x) for x in T2)
+    T1 = (Chaine(x) for x in T1)
+    T2 = (Chaine(x) for x in T2)
 
     for s1, s2 in zip(T1, T2):
         print(f"{s1} annonce {s2} : {s1.annonce(s2)}")
@@ -166,21 +206,21 @@ def testString():
 def testPile():
 
     P1 = Pile(3)
-    P1.empiler(String("VALEUR"))
-    P1.empiler(String("CATION"))
-    P1.empiler(String("SALON"))
-    # P1.empiler(String("EUROPE"))
+    P1.empiler(Chaine("VALEUR"))
+    P1.empiler(Chaine("CATION"))
+    P1.empiler(Chaine("SALON"))
+    # P1.empiler(Chaine("EUROPE"))
     P1.affiche()
 
     print("================================\n")
 
 
     P2 = PirePile(3)
-    P2.empiler(String("VALEUR"))
-    P2.empiler(String("CATION"))
-    P2.empiler(String("SALON"))
-    # P2.empiler(String("EUROPE"))
-    # P2.empiler(String("EUROPE"))
+    P2.empiler(Chaine("VALEUR"))
+    P2.empiler(Chaine("CATION"))
+    P2.empiler(Chaine("SALON"))
+    # P2.empiler(Chaine("EUROPE"))
+    # P2.empiler(Chaine("EUROPE"))
 
     P2.affiche()
     

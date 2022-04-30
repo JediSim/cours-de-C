@@ -76,3 +76,26 @@ autonomy/master/purpose is better for all stats of your enterprise
 |                               | while        |                            |                |                              |
 |                               | apart from   |                            |                |                              |
 
+## Exercises
+
+1. when i watch sport, my judgement is influenced by the fact that one team is my favorite. I don't question the decisions of the referee if they are to they advantage, but I do question them if they don't favor <u>them</u>.
+
+2. Contrary to the soldier, the scout represents a fairer reasoning. Indeed, the scout looks at the world in it's entirety.
+
+3. The Planet is fragile. We need to protect it.
+
+4. There are two types of mindset. On the one hand, the scout is curious, knows that they needs to make rational decisions and keeps searching for explanations. The soldier on the other hand, never looks for explanations, and just sees what they want to see.
+
+5. If we looks at the way the scout thinks, we see that they aren't afraid to change <u>there</u> mind in order to be as fair as that possible.
+
+6. Because shark vision is in black and white, <u>it</u> can't see any clors, which is why the research focused on this.
+
+7. I don't understand vegetarian or vegan people. Why depive ourselves? People have always eaten meat.
+
+## exo suivant
+
+8. the more I think about it, and weaker his argument sounds.
+
+9. the sooner, the better
+
+10. the more i code, the less i sleep
