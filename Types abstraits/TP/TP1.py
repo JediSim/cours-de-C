@@ -15,14 +15,14 @@ def assertion1(tab, k, i, x):
     # all = la condition est vrai pour tout j
     premier_membre = all([ tab[j] > x
                             for j in range(k,i+1) ]) 
-    second_membre = (tab[i-1] > tab[i]) and estTrieSurInterval(tab,0,i-2)
+    second_membre = (tab[i-1] > tab[i]) and estTrieSurInterval(tab,0,i-1)
 
     return premier_membre or second_membre
 
 def assertion2(tab, k, i, x):
     premier_membre = all([ tab[j] > x
                             for j in range(k,i+1) ])
-    second_membre = estTrieSurInterval(tab,0,i-2) and tab[k+1] == tab[k]
+    second_membre = estTrieSurInterval(tab,0,i-1) and tab[k+1] == tab[k]
     
     return premier_membre and second_membre
 
@@ -36,9 +36,9 @@ def assertion3(tab, k, i, x):
 def assertion4(tab, k, i, x):
     premier_membre = True
     if k > 1:
-        premier_membre = all([ (tab[j] <= x ) for j in range(k+1,i+1) ])
+        premier_membre = all([ (tab[j] <= x ) for j in range(0,k+1) ])
 
-    second_membre = all([ (tab[j] >= x ) for j in range(k+1,i)])
+    second_membre = all([ (tab[j] >= x ) for j in range(k+1,i+1)])
 
     troisieme_membre = True
     if k <= 0:
@@ -49,8 +49,6 @@ def assertion4(tab, k, i, x):
         quatrieme_membre = quatrieme_membre and tab[k+2] == tab[k+1]
 
     return premier_membre and second_membre or troisieme_membre and quatrieme_membre
-    
-      
 
 def tri_insert_seq(tab, i):
     if i > 0:

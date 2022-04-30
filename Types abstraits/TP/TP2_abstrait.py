@@ -193,7 +193,7 @@ class PirePile:
 
 
 def testString():
-    T1 = ("VALEUR", "CATION", "SALON")
+    T1 = ("", "CATION", "SALON")
     T2 = ("EUROPE", "IONISATION", "NOUVEAU")
     T1 = (Chaine(x) for x in T1)
     T2 = (Chaine(x) for x in T2)
@@ -226,4 +226,4 @@ def testPile():
     
 
 if __name__ == "__main__":
-    testPile()
+    testString()
