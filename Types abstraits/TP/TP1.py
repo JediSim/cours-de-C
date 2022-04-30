@@ -42,10 +42,10 @@ def assertion4(tab, k, i, x):
 
     troisieme_membre = True
     if k <= 0:
-        troisieme_membre = all([ (tab[j] >= x ) for j in range(1,i)])
+        troisieme_membre = all([ (tab[j] >= x ) for j in range(0,i+1)])
 
-    quatrieme_membre = estTrieSurInterval(tab,0,i-1)
-    if k+2 < len(tab)-1:
+    quatrieme_membre = estTrieSurInterval(tab,0,i)
+    if k+2 < len(tab):
         quatrieme_membre = quatrieme_membre and tab[k+2] == tab[k+1]
 
     return premier_membre and second_membre or troisieme_membre and quatrieme_membre
@@ -216,7 +216,7 @@ def affiche_arbre(a,i,niveau):
 if __name__ == "__main__": 
     # try:
     # tab = [None]
-    tab = [randint(0, 100) for _ in range(10)]
+    tab = [randint(0, 100) for _ in range(100)]
     print("tab : ", tab)
     tab_trie = tri_insert_seq(tab,len(tab)-1)
     # print("tab trié : ", tab_trie)
