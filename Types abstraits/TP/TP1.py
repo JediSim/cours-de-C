@@ -1,6 +1,6 @@
 from random import randint
 from utils import question
-import random
+from random import randint
 
 # ===================================================================== tri insertion
 
@@ -251,32 +251,35 @@ def affiche_arbre(a, i=0, niveau=1):
 
 if __name__ == "__main__":
     try:
+
         while True:
+
             print("""
-            1. Tri par insertion séquentiel
-            2. Tri par tas
+1. Tri par insertion séquentiel
+2. Tri par tas
             """)
             choix = input("Votre choix : ")
+
             if choix == "1":
                 print(
-                    "Entrez les éléments du tableau (int ou 'a' pour aléatoire) séparés par des virgules : ")
+                    "Entrez les éléments du tableau (entier ou 'a' pour aléatoire) séparés par des virgules : ")
                 tab = input().split(",")
-                tab = [int(x) if x != 'a' else random.randint(0, 100)
-                       for x in tab]
+                tab = [int(x) if x != 'a' else randint(0, 100) for x in tab]
 
                 print("Tableau : ", tab)
                 tri_insert_seq(tab, len(tab)-1)
                 print("Tableau trié : ", tab)
+
             elif choix == "2":
                 print(
-                    "Entrez les éléments du tableau (int ou 'a' pour aléatoire) séparés par des virgules : ")
+                    "Entrez les éléments du tableau (entier ou 'a' pour aléatoire) séparés par des virgules : ")
                 tab = input().split(",")
-                tab = [int(x) if x != 'a' else random.randint(0, 100)
-                       for x in tab]
+                tab = [int(x) if x != 'a' else randint(0, 100) for x in tab]
 
                 print("Tableau : ", tab)
                 tri_tas(tab)
                 print("Tableau trié : ", tab)
+
             else:
                 print("Choix incorrect")
 
