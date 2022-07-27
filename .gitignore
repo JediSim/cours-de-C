@@ -14,3 +14,4 @@
 *.tar
 /systeme/TP2/sfs
 **/__pycache__
+.env

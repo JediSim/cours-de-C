@@ -1,17 +1,24 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"workspace/src/typeApi"
 
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 var Articles []typeApi.Article
+var ctx = context.TODO()
+var collection *mongo.Collection
 
 func homePage(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Welcome to the HomePage!")
@@ -109,6 +116,32 @@ func handleRequests() {
 }
 
 func init() {
+
+	// On charge le .env
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	// On récupère la variable d'environnement MONGO_URI
+	clientOptions := options.Client().ApplyURI(os.Getenv("MONGO_URI"))
+	client, err := mongo.Connect(ctx, clientOptions)
+	if err != nil {
+		fmt.Println("premiere erreur")
+		log.Fatal(err)
+	}
+	err = client.Ping(ctx, nil)
+	if err != nil {
+		fmt.Println("2 erreur")
+		log.Fatal(err)
+	}
+
+	collection = client.Database("api-go").Collection("Articles")
+	_, err = collection.InsertOne(ctx, typeApi.Article{Id: "2", Title: "Hello 2", Desc: "Article Description", Content: "Article Content"})
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	Articles = []typeApi.Article{
 		typeApi.Article{Id: "2", Title: "Hello 2", Desc: "Article Description", Content: "Article Content"},
 		typeApi.Article{Id: "1", Title: "Hello", Desc: "Article Description", Content: "Article Content"},
