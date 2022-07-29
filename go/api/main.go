@@ -28,7 +28,18 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 
 func returnAllArticles(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Endpoint Hit: returnAllArticles")
-	json.NewEncoder(w).Encode(Articles)
+	// json.NewEncoder(w).Encode(Articles)
+	cur, err := collection.Find(ctx, bson.M{})
+	if err != nil {
+		json.NewEncoder(w).Encode(err)
+		return
+	}
+	var results []typeApi.Article
+	if err := cur.All(ctx, &results); err != nil {
+		json.NewEncoder(w).Encode(err)
+		return
+	}
+	json.NewEncoder(w).Encode(results)
 }
 
 func returnSingleArticle(w http.ResponseWriter, r *http.Request) {
@@ -54,20 +65,24 @@ func createNewArticle(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal(reqBody, &article)
 	// update our global Articles array to include
 	// our new Article
+	fmt.Println(article)
 	var findArticle bson.M
 	err := collection.FindOne(ctx, bson.M{"id": article.Id}).Decode(&findArticle)
 
-	if err != nil && err != mongo.ErrNoDocuments {
-		json.NewEncoder(w).Encode(err)
-		return
-	}
 	if err == mongo.ErrNoDocuments {
 		_, err = collection.InsertOne(ctx, article)
 		if err != nil {
 			json.NewEncoder(w).Encode(err)
+			return
 		} else {
 			json.NewEncoder(w).Encode(article)
+			return
 		}
+	}
+
+	if err != nil {
+		json.NewEncoder(w).Encode(err)
+
 	} else {
 		json.NewEncoder(w).Encode("Article already exists")
 	}
@@ -97,17 +112,25 @@ func deleteArticle(w http.ResponseWriter, r *http.Request) {
 func updateArticle(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
+	// si on se réfère pas au meme type la caste des champs est prise en compte
 	var updatedEvent typeApi.Article
 	reqBody, _ := ioutil.ReadAll(r.Body)
 	json.Unmarshal(reqBody, &updatedEvent)
-	for i, article := range Articles {
-		if article.Id == id {
-			article.Title = updatedEvent.Title
-			article.Desc = updatedEvent.Desc
-			article.Content = updatedEvent.Content
-			Articles[i] = article
-			json.NewEncoder(w).Encode(article)
+	updatedEvent.Id = id
+	// var update bson.M
+	// for key, value := range updatedEvent {
+	// 	update[key] = value
+	// }
+	fmt.Println(bson.M{"$set": updatedEvent})
+	err := collection.FindOneAndUpdate(ctx, bson.M{"id": id}, bson.M{"$set": updatedEvent}).Decode(&updatedEvent)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			json.NewEncoder(w).Encode("Article not found")
+		} else {
+			json.NewEncoder(w).Encode(err)
 		}
+	} else {
+		json.NewEncoder(w).Encode(updatedEvent)
 	}
 
 }
