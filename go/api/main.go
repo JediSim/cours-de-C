@@ -12,6 +12,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -53,9 +54,24 @@ func createNewArticle(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal(reqBody, &article)
 	// update our global Articles array to include
 	// our new Article
-	Articles = append(Articles, article)
+	var findArticle bson.M
+	err := collection.FindOne(ctx, bson.M{"id": article.Id}).Decode(&findArticle)
 
-	json.NewEncoder(w).Encode(article)
+	if err != nil && err != mongo.ErrNoDocuments {
+		json.NewEncoder(w).Encode(err)
+		return
+	}
+	if err == mongo.ErrNoDocuments {
+		_, err = collection.InsertOne(ctx, article)
+		if err != nil {
+			json.NewEncoder(w).Encode(err)
+		} else {
+			json.NewEncoder(w).Encode(article)
+		}
+	} else {
+		json.NewEncoder(w).Encode("Article already exists")
+	}
+
 }
 
 func deleteArticle(w http.ResponseWriter, r *http.Request) {
@@ -137,10 +153,6 @@ func init() {
 	}
 
 	collection = client.Database("api-go").Collection("Articles")
-	_, err = collection.InsertOne(ctx, typeApi.Article{Id: "2", Title: "Hello 2", Desc: "Article Description", Content: "Article Content"})
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	Articles = []typeApi.Article{
 		typeApi.Article{Id: "2", Title: "Hello 2", Desc: "Article Description", Content: "Article Content"},
