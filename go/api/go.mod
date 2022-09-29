@@ -8,6 +8,8 @@ require (
 	github.com/joho/godotenv v1.4.0
 )
 
+require github.com/golang-jwt/jwt/v4 v4.4.2 // indirect
+
 require (
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect

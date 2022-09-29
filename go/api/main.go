@@ -15,11 +15,14 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+
+	"github.com/golang-jwt/jwt/v4"
 )
 
 var Articles []typeApi.Article
 var ctx = context.TODO()
 var collection *mongo.Collection
+var jwtKey string
 
 func homePage(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Welcome to the HomePage!")
@@ -135,6 +138,42 @@ func updateArticle(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func createToken(w http.ResponseWriter, r *http.Request) {
+
+	reqBody, _ := ioutil.ReadAll(r.Body)
+	var user jwt.MapClaims
+	json.Unmarshal(reqBody, &user)
+
+	var key interface{}
+	key, err := jwt.ParseRSAPrivateKeyFromPEM([]byte(jwtKey))
+	if err != nil {
+		fmt.Println(err)
+		json.NewEncoder(w).Encode(err)
+		return
+	}
+	// key = interface{}(jwtKey)
+	fmt.Println("key :", jwtKey)
+
+	alg := jwt.GetSigningMethod("EdDSA")
+
+	if alg == nil {
+		fmt.Println("Invalid signing method")
+		return
+	}
+
+	token := jwt.NewWithClaims(alg, jwt.MapClaims{
+		"username": user["username"],
+		"password": user["password"],
+	})
+	fmt.Println("token :", token)
+
+	if out, err := token.SignedString(key); err == nil {
+		fmt.Println(out)
+	} else {
+		fmt.Println("err : ", err)
+	}
+}
+
 func handleRequests() {
 	// creates a new instance of a mux router
 	myRouter := mux.NewRouter().StrictSlash(true)
@@ -142,6 +181,7 @@ func handleRequests() {
 	myRouter.HandleFunc("/", homePage).Methods("GET")
 	myRouter.HandleFunc("/article/{id}", returnSingleArticle).Methods("GET")
 	myRouter.HandleFunc("/articles", returnAllArticles).Methods("GET")
+	myRouter.HandleFunc("/token", createToken).Methods("GET")
 
 	myRouter.HandleFunc("/article/{id}", deleteArticle).Methods("DELETE")
 
@@ -175,11 +215,13 @@ func init() {
 		log.Fatal(err)
 	}
 
+	jwtKey = os.Getenv("SIGN_KEY")
+
 	collection = client.Database("api-go").Collection("Articles")
 
 	Articles = []typeApi.Article{
-		typeApi.Article{Id: "2", Title: "Hello 2", Desc: "Article Description", Content: "Article Content"},
-		typeApi.Article{Id: "1", Title: "Hello", Desc: "Article Description", Content: "Article Content"},
+		{Id: "2", Title: "Hello 2", Desc: "Article Description", Content: "Article Content"},
+		{Id: "1", Title: "Hello", Desc: "Article Description", Content: "Article Content"},
 	}
 }
 
