@@ -22,7 +22,7 @@ import (
 var Articles []typeApi.Article
 var ctx = context.TODO()
 var collection *mongo.Collection
-var jwtKey string
+var jwtKey []byte
 
 func homePage(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Welcome to the HomePage!")
@@ -145,14 +145,14 @@ func createToken(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal(reqBody, &user)
 
 	var key interface{}
-	key, err := jwt.ParseRSAPrivateKeyFromPEM([]byte(jwtKey))
+	key, err := jwt.ParseRSAPrivateKeyFromPEM(jwtKey)
 	if err != nil {
 		fmt.Println(err)
 		json.NewEncoder(w).Encode(err)
 		return
 	}
 	// key = interface{}(jwtKey)
-	fmt.Println("key :", jwtKey)
+	fmt.Println("key :", key)
 
 	alg := jwt.GetSigningMethod("EdDSA")
 
@@ -162,10 +162,11 @@ func createToken(w http.ResponseWriter, r *http.Request) {
 	}
 
 	token := jwt.NewWithClaims(alg, jwt.MapClaims{
-		"username": user["username"],
+		"mail":     user["mail"],
 		"password": user["password"],
 	})
 	fmt.Println("token :", token)
+	json.NewEncoder(w).Encode(token)
 
 	if out, err := token.SignedString(key); err == nil {
 		fmt.Println(out)
@@ -215,7 +216,11 @@ func init() {
 		log.Fatal(err)
 	}
 
-	jwtKey = os.Getenv("SIGN_KEY")
+	jwtKey, err = ioutil.ReadFile("pkcs8.key")
+	if err != nil {
+		fmt.Println("3 erreur")
+		log.Fatal(err)
+	}
 
 	collection = client.Database("api-go").Collection("Articles")
 
